@@ -1,5 +1,5 @@
 export enum ENV_KEY {
-  REPLICATE_API_TOKEN = "REPLICATE_API_TOKEN",
+  REPLICATE_API_KEY = "REPLICATE_API_KEY",
 }
 
 /**
@@ -11,7 +11,7 @@ export enum ENV_KEY {
  */
 export const getEnv = (key: ENV_KEY): string | null => {
   switch (key) {
-    case ENV_KEY.REPLICATE_API_TOKEN:
-      return process.env.REPLICATE_API_TOKEN ?? null;
+    case ENV_KEY.REPLICATE_API_KEY:
+      return process.env[key] ?? null;
   }
 };

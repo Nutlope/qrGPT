@@ -1,11 +1,6 @@
-import { QrGenerateRequest } from "@/models/service";
-import { ENV_KEY, getEnv } from "@/utils/env";
+import { replicateClient } from "@/api/replicate/ReplicateClient";
+import { QrGenerateRequest, QrGenerateResponse } from "@/models/service";
 import { NextRequest } from "next/server";
-import Replicate from "replicate";
-
-const replicate = new Replicate({
-  auth: getEnv(ENV_KEY.REPLICATE_API_TOKEN) ?? "NA",
-});
 
 /**
  * Validates a request object.
@@ -23,7 +18,7 @@ const validateRequest = (request: QrGenerateRequest) => {
   }
 };
 
-export async function GET(request: NextRequest) {
+export async function POST(request: NextRequest) {
   const reqBody = (await request.json()) as QrGenerateRequest;
 
   // Validate the request.
@@ -35,15 +30,19 @@ export async function GET(request: NextRequest) {
     }
   }
 
-  const output = await replicate.run(
-    "zylim0702/qr_code_controlnet:628e604e13cf63d8ec58bd4d238474e8986b054bc5e1326e50995fdbc851c557",
-    {
-      input: {
-        url: reqBody.url,
-        prompt: reqBody.prompt,
-      },
-    }
-  );
+  const startTime = performance.now();
+  const imageUrl = await replicateClient.generateQrCode({
+    url: reqBody.url,
+    prompt: reqBody.prompt,
+  });
+  const endTime = performance.now();
+  console.log(`[Replicate] QR code generated in ${endTime - startTime}ms`);
 
-  console.log(output);
+  const response: QrGenerateResponse = {
+    image_url: imageUrl,
+    model_latency_ms: Math.round(endTime - startTime),
+  };
+  return new Response(JSON.stringify(response), {
+    status: 200,
+  });
 }
