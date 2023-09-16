@@ -10,8 +10,8 @@ const Navbar = () => {
   const [state, setState] = useState(false);
 
   const navigation = [
-    { title: 'Features', path: '#features' },
     { title: 'Testimonials', path: '#testimonials' },
+    { title: 'Start Now', path: '#cta' },
   ];
 
   useEffect(() => {
@@ -105,6 +105,7 @@ const Navbar = () => {
                 </NavLink>
               </li>
             </ul>
+            {/* grid of images 4 in each row */}
           </div>
         </div>
       </nav>

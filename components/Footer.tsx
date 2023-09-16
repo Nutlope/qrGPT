@@ -1,3 +1,5 @@
+import { V0Logo } from './v0logo';
+
 const socialInfo = [
   {
     icon: (
@@ -48,20 +50,33 @@ const socialInfo = [
 const Footer = () => (
   <footer>
     <div className="custom-screen pt-16">
-      <div className="mt-10 py-10 border-t items-center justify-between sm:flex">
-        <p className="text-gray-600">© 2023 QrGPT. All rights reserved.</p>
-        <div className="flex items-center gap-x-6 text-gray-400 mt-6">
-          {socialInfo.map((item, idx) => (
-            <a
-              key={idx}
-              href={item.href}
-              aria-label="social media"
-              target="_blank"
-              rel="noreferrer"
-            >
-              {item.icon}
-            </a>
-          ))}
+      <div className="mt-10 py-10 border-t items-center justify-between flex">
+        <p className="text-gray-600">
+          Created by{' '}
+          <a
+            href="https://twitter.com/nutlope"
+            className="hover:underline transition"
+          >
+            Hassan
+          </a>{' '}
+          and{' '}
+          <a
+            href="https://twitter.com/kevinhou22"
+            className="hover:underline transition"
+          >
+            Kevin
+          </a>
+          .
+        </p>
+        <div className="flex items-center gap-x-6 text-gray-400">
+          <a
+            className="border border-slate-200 rounded-md px-3 py-1 tracking-tight flex gap-1 hover:scale-105 transition"
+            href="https://v0.dev/"
+            target="_blank"
+          >
+            <span className="text-gray-500 text-sm">Built with</span>
+            <V0Logo width={24} />
+          </a>
         </div>
       </div>
     </div>
