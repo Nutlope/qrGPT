@@ -1,5 +1,5 @@
-import { cn } from "@/lib/utils";
-import React from "react";
+import { cn } from '@/utils/utils';
+import React from 'react';
 
 type QrCardProps = {
   containerClassName?: string;
@@ -9,7 +9,7 @@ type QrCardProps = {
 };
 
 export const QrCard: React.FC<QrCardProps> = ({
-  containerClassName = "",
+  containerClassName = '',
   id,
   isLoading = false,
   imageURL,
@@ -18,7 +18,7 @@ export const QrCard: React.FC<QrCardProps> = ({
     return (
       <div
         className={cn(
-          "animate-pulse bg-gray-200 aspect-square w-full rounded",
+          'animate-pulse bg-gray-200 aspect-square w-full rounded',
           containerClassName
         )}
         style={{
@@ -40,7 +40,7 @@ export const QrCard: React.FC<QrCardProps> = ({
     <div
       className={cn(
         containerClassName,
-        "flex flex-col justify-center relative h-auto items-center border border-gray-300 rounded p-2 shadow group"
+        'flex flex-col justify-center relative h-auto items-center border border-gray-300 rounded p-2 shadow group'
       )}
     >
       <div className="relative flex flex-col justify-center items-center gap-y-2">

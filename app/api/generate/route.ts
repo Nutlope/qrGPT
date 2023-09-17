@@ -1,5 +1,5 @@
 import { replicateClient } from '@/api/replicate/ReplicateClient';
-import { QrGenerateRequest, QrGenerateResponse } from '@/models/service';
+import { QrGenerateRequest, QrGenerateResponse } from '@/utils/service';
 import { NextRequest } from 'next/server';
 import { Ratelimit } from '@upstash/ratelimit';
 import { kv } from '@vercel/kv';

@@ -1,10 +1,10 @@
-"use client";
+'use client';
 
-import { NextPage } from "next";
-import * as z from "zod";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
-import _ from "lodash";
+import { NextPage } from 'next';
+import * as z from 'zod';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { useForm } from 'react-hook-form';
+import _ from 'lodash';
 import {
   Form,
   FormControl,
@@ -13,16 +13,15 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from "@/components/ui/form";
-import { Textarea } from "@/components/ui/textarea";
-import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
-import { useCallback, useState } from "react";
-import { QrGenerateRequest, QrGenerateResponse } from "@/models/service";
-import { QrCard } from "@/components/QrCard/QrCard";
-import { AlertCircle } from "lucide-react";
-import { Alert, AlertTitle, AlertDescription } from "@/components/ui/alert";
-import { cn } from "@/lib/utils";
+} from '@/components/ui/form';
+import { Textarea } from '@/components/ui/textarea';
+import { Input } from '@/components/ui/input';
+import { Button } from '@/components/ui/button';
+import { useCallback, useState } from 'react';
+import { QrGenerateRequest, QrGenerateResponse } from '@/utils/service';
+import { QrCard } from '@/components/QrCard/QrCard';
+import { AlertCircle } from 'lucide-react';
+import { Alert, AlertTitle, AlertDescription } from '@/components/ui/alert';
 
 const generateFormSchema = z.object({
   url: z.string().url(),
@@ -32,8 +31,8 @@ const generateFormSchema = z.object({
 type GenerateFormValues = z.infer<typeof generateFormSchema>;
 
 const defaultValues: Partial<GenerateFormValues> = {
-  url: "https://qrgpt.ai",
-  prompt: "a sleek, modern computer circuit with muted colors",
+  url: 'https://www.qrgpt.io',
+  prompt: 'a sleek, modern computer circuit with muted colors',
 };
 
 const NUM_PARALLEL_REQUESTS = 1;
@@ -46,7 +45,7 @@ const GeneratePage: NextPage = () => {
   const form = useForm<GenerateFormValues>({
     resolver: zodResolver(generateFormSchema),
     defaultValues,
-    mode: "onChange",
+    mode: 'onChange',
   });
 
   const handleSubmit = useCallback(async (values: GenerateFormValues) => {
@@ -58,8 +57,8 @@ const GeneratePage: NextPage = () => {
         prompt: values.prompt,
         num_variants: NUM_PARALLEL_REQUESTS,
       };
-      const response = await fetch("/api/generate", {
-        method: "POST",
+      const response = await fetch('/api/generate', {
+        method: 'POST',
         body: JSON.stringify(request),
       });
 
@@ -81,10 +80,10 @@ const GeneratePage: NextPage = () => {
   }, []);
 
   return (
-    <div className="flex justify-center items-center flex-col w-full">
+    <div className="flex justify-center items-center flex-col w-full lg:p-0 p-4">
       <div className="max-w-5xl w-full grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-12">
         <div className="col-span-1">
-          <h1>Generate a QR Code</h1>
+          <h1 className="text-3xl font-bold mb-10">Generate a QR Code</h1>
           <Form {...form}>
             <form onSubmit={form.handleSubmit(handleSubmit)}>
               <div className="flex flex-col gap-4">
@@ -98,7 +97,7 @@ const GeneratePage: NextPage = () => {
                         <Input placeholder="shadcn" {...field} />
                       </FormControl>
                       <FormDescription>
-                        This is what the QR code will link to.
+                        This is what your QR code will link to.
                       </FormDescription>
                       <FormMessage />
                     </FormItem>
@@ -118,7 +117,7 @@ const GeneratePage: NextPage = () => {
                         />
                       </FormControl>
                       <FormDescription>
-                        This is what the image will look like.
+                        This is what the image in your QR code will look like.
                       </FormDescription>
                       <FormMessage />
                     </FormItem>
@@ -143,11 +142,8 @@ const GeneratePage: NextPage = () => {
           <h2>Results</h2>
           {response && (
             <>
-              <h3 className="text-xl">
-                {isLoading ? "Generating..." : "Complete"}
-              </h3>
               <p className="text-gray-500 text-sm mb-4">
-                QR code{NUM_PARALLEL_REQUESTS > 1 ? "s" : ""} took{" "}
+                QR code{NUM_PARALLEL_REQUESTS > 1 ? 's' : ''} took{' '}
                 {(response.model_latency_ms / 1000).toFixed(2)} seconds
               </p>
               <div className="grid grid-cols-1 gap-8">

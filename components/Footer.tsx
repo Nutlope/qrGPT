@@ -74,8 +74,8 @@ const Footer = () => (
             href="https://v0.dev/"
             target="_blank"
           >
-            <span className="text-gray-500 text-sm">Built with</span>
-            <V0Logo width={24} />
+            <span className="text-gray-500">Built with</span>
+            <V0Logo width={25} />
           </a>
         </div>
       </div>
