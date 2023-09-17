@@ -40,11 +40,14 @@ export const QrCard: React.FC<QrCardProps> = ({
     <div
       className={cn(
         containerClassName,
-        "flex flex-col justify-center items-center gap-y-2"
+        "flex flex-col justify-center relative h-auto items-center border border-gray-300 rounded p-2 shadow group"
       )}
     >
-      <img src={imageURL} className="w-full" />
-      <p className="text-gray-400 text-sm italic">Option {id + 1}</p>
+      <div className="relative flex flex-col justify-center items-center gap-y-2">
+        <div className="absolute opacity-100 w-[80%] h-[80%] border-6 border-yellow-500 border-dashed rounded left-[10%] top-[10%]" />
+        <img src={imageURL} className="w-full rounded" />
+        <p className="text-gray-400 text-sm italic">Option {id + 1}</p>
+      </div>
     </div>
   );
 };

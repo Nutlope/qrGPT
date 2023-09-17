@@ -82,82 +82,86 @@ const GeneratePage: NextPage = () => {
 
   return (
     <div className="flex justify-center items-center flex-col w-full">
-      <div className="max-w-3xl w-full">
-        <h1>Generate a QR Code</h1>
-        <Form {...form}>
-          <form onSubmit={form.handleSubmit(handleSubmit)}>
-            <div className="flex flex-col gap-4">
-              <FormField
-                control={form.control}
-                name="url"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>URL</FormLabel>
-                    <FormControl>
-                      <Input placeholder="shadcn" {...field} />
-                    </FormControl>
-                    <FormDescription>
-                      This is what the QR code will link to.
-                    </FormDescription>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name="prompt"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Prompt</FormLabel>
-                    <FormControl>
-                      <Textarea
-                        placeholder="Enter a prompt"
-                        className="resize-none"
-                        {...field}
-                      />
-                    </FormControl>
-                    <FormDescription>
-                      This is what the image will look like.
-                    </FormDescription>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <Button type="submit" disabled={isLoading}>
-                Generate
-              </Button>
-
-              {error && (
-                <Alert variant="destructive">
-                  <AlertCircle className="h-4 w-4" />
-                  <AlertTitle>Error</AlertTitle>
-                  <AlertDescription>{error.message}</AlertDescription>
-                </Alert>
-              )}
-            </div>
-          </form>
-        </Form>
-
-        {response && (
-          <div className="mt-8">
-            <h3 className="text-xl">
-              {isLoading ? "Generating..." : "Complete"}
-            </h3>
-            <p className="text-gray-500 text-sm mb-4">
-              QR code{NUM_PARALLEL_REQUESTS > 1 ? "s" : ""} took{" "}
-              {(response.model_latency_ms / 1000).toFixed(2)} seconds
-            </p>
-            <div className="grid grid-cols-4 gap-8">
-              {response.image_urls.map((imageURL, idx) => (
-                <QrCard
-                  key={`${imageURL}-${idx}`}
-                  id={idx}
-                  imageURL={imageURL}
+      <div className="max-w-5xl w-full grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-12">
+        <div className="col-span-1">
+          <h1>Generate a QR Code</h1>
+          <Form {...form}>
+            <form onSubmit={form.handleSubmit(handleSubmit)}>
+              <div className="flex flex-col gap-4">
+                <FormField
+                  control={form.control}
+                  name="url"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>URL</FormLabel>
+                      <FormControl>
+                        <Input placeholder="shadcn" {...field} />
+                      </FormControl>
+                      <FormDescription>
+                        This is what the QR code will link to.
+                      </FormDescription>
+                      <FormMessage />
+                    </FormItem>
+                  )}
                 />
-              ))}
-            </div>
-          </div>
-        )}
+                <FormField
+                  control={form.control}
+                  name="prompt"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Prompt</FormLabel>
+                      <FormControl>
+                        <Textarea
+                          placeholder="Enter a prompt"
+                          className="resize-none"
+                          {...field}
+                        />
+                      </FormControl>
+                      <FormDescription>
+                        This is what the image will look like.
+                      </FormDescription>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <Button type="submit" disabled={isLoading}>
+                  Generate
+                </Button>
+
+                {error && (
+                  <Alert variant="destructive">
+                    <AlertCircle className="h-4 w-4" />
+                    <AlertTitle>Error</AlertTitle>
+                    <AlertDescription>{error.message}</AlertDescription>
+                  </Alert>
+                )}
+              </div>
+            </form>
+          </Form>
+        </div>
+        <div className="col-span-1">
+          <h2>Results</h2>
+          {response && (
+            <>
+              <h3 className="text-xl">
+                {isLoading ? "Generating..." : "Complete"}
+              </h3>
+              <p className="text-gray-500 text-sm mb-4">
+                QR code{NUM_PARALLEL_REQUESTS > 1 ? "s" : ""} took{" "}
+                {(response.model_latency_ms / 1000).toFixed(2)} seconds
+              </p>
+              <div className="grid grid-cols-1 gap-8">
+                {response.image_urls.map((imageURL, idx) => (
+                  <QrCard
+                    key={`${imageURL}-${idx}`}
+                    id={idx}
+                    imageURL={imageURL}
+                  />
+                ))}
+              </div>
+            </>
+          )}
+        </div>
       </div>
     </div>
   );
