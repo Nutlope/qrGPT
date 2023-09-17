@@ -41,6 +41,7 @@ const GeneratePage: NextPage = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<Error | null>(null);
   const [response, setResponse] = useState<QrGenerateResponse | null>(null);
+  const [submittedURL, setSubmittedURL] = useState<string | null>(null);
 
   const form = useForm<GenerateFormValues>({
     resolver: zodResolver(generateFormSchema),
@@ -50,6 +51,7 @@ const GeneratePage: NextPage = () => {
 
   const handleSubmit = useCallback(async (values: GenerateFormValues) => {
     setIsLoading(true);
+    setSubmittedURL(values.url);
 
     try {
       const request: QrGenerateRequest = {
@@ -140,7 +142,7 @@ const GeneratePage: NextPage = () => {
         </div>
         <div className="col-span-1">
           <h2>Results</h2>
-          {response && (
+          {response && submittedURL && (
             <>
               <p className="text-gray-500 text-sm mb-4">
                 QR code{NUM_PARALLEL_REQUESTS > 1 ? 's' : ''} took{' '}
@@ -151,6 +153,7 @@ const GeneratePage: NextPage = () => {
                   <QrCard
                     key={`${imageURL}-${idx}`}
                     id={idx}
+                    href={submittedURL}
                     imageURL={imageURL}
                   />
                 ))}
