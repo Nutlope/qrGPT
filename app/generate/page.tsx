@@ -4,6 +4,7 @@ import { NextPage } from "next";
 import * as z from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
+import _ from "lodash";
 import {
   Form,
   FormControl,
@@ -16,10 +17,15 @@ import {
 import { Textarea } from "@/components/ui/textarea";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { useCallback, useState } from "react";
-import { QrGenerateRequest, QrGenerateResponse } from "@/models/service";
+import { useCallback, useMemo, useState } from "react";
+import {
+  FetchLifecycleType,
+  QrGenerateRequest,
+  QrGenerateResponse,
+} from "@/models/service";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { AlertCircle } from "lucide-react";
+import { QrCard } from "@/components/QrCard/QrCard";
 
 const generateFormSchema = z.object({
   url: z.string().url(),
@@ -33,11 +39,10 @@ const defaultValues: Partial<GenerateFormValues> = {
   prompt: "a sleek, modern computer circuit with muted colors",
 };
 
+const NUM_PARALLEL_REQUESTS = 2;
+
 const GeneratePage: NextPage = () => {
-  const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState<Error | null>(null);
-  const [generateResponse, setGenerateResponse] =
-    useState<QrGenerateResponse | null>(null);
+  const [fetchStates, setFetchStates] = useState<FetchLifecycleType[]>([]);
 
   const form = useForm<GenerateFormValues>({
     resolver: zodResolver(generateFormSchema),
@@ -46,33 +51,78 @@ const GeneratePage: NextPage = () => {
   });
 
   const handleSubmit = useCallback(async (values: GenerateFormValues) => {
-    setIsLoading(true);
-    try {
-      const req: QrGenerateRequest = {
-        url: values.url,
-        prompt: values.prompt,
-      };
-      const response = await fetch("/api/generate", {
-        method: "POST",
-        body: JSON.stringify(req),
+    // Generate N parallel requests.
+    const newStates: FetchLifecycleType[] = [];
+    for (let i = 0; i < NUM_PARALLEL_REQUESTS; i++) {
+      newStates.push({
+        isLoading: true,
+        error: null,
+        request: {
+          url: values.url,
+
+          // TODO (@kevinhou): Add some prompt randomization to promote variance.
+          prompt: values.prompt,
+        },
+        response: null,
       });
-
-      // Handle API errors.
-      if (!response.ok || response.status !== 200) {
-        const text = await response.text();
-        throw new Error(`Failed to generate QR code: ${text}`);
-      }
-
-      const data = await response.json();
-      setGenerateResponse(data);
-    } catch (e) {
-      if (e instanceof Error) {
-        setError(e);
-      }
-    } finally {
-      setIsLoading(false);
     }
+    setFetchStates(newStates);
+
+    // Make parallel requests and handle loading, error states independently.
+    newStates.forEach((state, idx) => {
+      try {
+        fetch("/api/generate", {
+          method: "POST",
+          body: JSON.stringify(state.request),
+        }).then(async (response) => {
+          // Handle API errors.
+          if (!response.ok || response.status !== 200) {
+            const text = await response.text();
+            throw new Error(`Failed to generate QR code: ${text}`);
+          }
+
+          const data = await response.json();
+          setFetchStates((prev) => {
+            const newStatuses = [...prev];
+            newStatuses[idx] = {
+              ...prev[idx],
+              isLoading: true,
+              response: data,
+            };
+            return newStatuses;
+          });
+        });
+      } catch (e) {
+        setFetchStates((prev) => {
+          const newStatuses = [...prev];
+          if (e instanceof Error) {
+            newStatuses[idx] = {
+              ...prev[idx],
+              error: e,
+            };
+          }
+          return newStatuses;
+        });
+      } finally {
+        setFetchStates((prev) => {
+          const newStatuses = [...prev];
+          newStatuses[idx] = {
+            ...prev[idx],
+            isLoading: false,
+          };
+          return newStatuses;
+        });
+      }
+    });
   }, []);
+
+  const errors = useMemo(
+    () =>
+      fetchStates.map((state) => state.error).filter((v) => !_.isUndefined(v)),
+    []
+  );
+
+  const isLoading = _.findIndex(fetchStates, (state) => state.isLoading) !== -1;
 
   return (
     <div className="flex justify-center items-center flex-col w-full">
@@ -120,27 +170,26 @@ const GeneratePage: NextPage = () => {
               <Button type="submit" disabled={isLoading}>
                 Generate
               </Button>
-              {error && (
+              {errors.length > 0 && (
                 <Alert variant="destructive">
                   <AlertCircle className="h-4 w-4" />
                   <AlertTitle>Error</AlertTitle>
-                  <AlertDescription>{error.message}</AlertDescription>
+                  <AlertDescription>
+                    {errors.map((v) => (
+                      <p>{v?.message ?? "Error"}</p>
+                    ))}
+                  </AlertDescription>
                 </Alert>
               )}
             </div>
           </form>
         </Form>
 
-        {generateResponse && (
-          <div>
-            <h3>Success!</h3>
-            <p>
-              Generation took{" "}
-              {(generateResponse.model_latency_ms / 1000).toFixed(2)} seconds.
-            </p>
-            <img src={generateResponse.image_url} className="w-40" />
-          </div>
-        )}
+        <div className="grid grid-cols-4">
+          {fetchStates.map((state, idx) => (
+            <QrCard key={`${state.request.prompt}-${idx}`} state={state} />
+          ))}
+        </div>
       </div>
     </div>
   );
