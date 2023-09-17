@@ -163,11 +163,24 @@ const GeneratePage: NextPage = () => {
           </form>
         </Form>
 
-        <div className="grid grid-cols-4">
-          {fetchStates.map((state, idx) => (
-            <QrCard key={`${state.request.prompt}-${idx}`} state={state} />
-          ))}
-        </div>
+        {fetchStates.length > 0 && (
+          <div className="mt-8">
+            <h3 className="text-xl mb-4">
+              {isLoading
+                ? "Generating..."
+                : `Generated ${fetchStates.length} QR Codes`}
+            </h3>
+            <div className="grid grid-cols-4 gap-8">
+              {fetchStates.map((state, idx) => (
+                <QrCard
+                  key={`${state.request.prompt}-${idx}`}
+                  id={idx}
+                  state={state}
+                />
+              ))}
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );
