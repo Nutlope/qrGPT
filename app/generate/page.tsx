@@ -33,7 +33,7 @@ const defaultValues: Partial<GenerateFormValues> = {
   prompt: "a sleek, modern computer circuit with muted colors",
 };
 
-const NUM_PARALLEL_REQUESTS = 2;
+const NUM_PARALLEL_REQUESTS = 4;
 
 const GeneratePage: NextPage = () => {
   const [fetchStates, setFetchStates] = useState<FetchLifecycleType[]>([]);

@@ -16,9 +16,12 @@ export const QrCard: React.FC<QrCardProps> = ({
     return (
       <div
         className={cn(
-          "animate-pulse bg-gray-200 aspect-square w-full",
+          "animate-pulse bg-gray-200 aspect-square w-full rounded",
           containerClassName
         )}
+        style={{
+          animationDelay: `${id * 250}ms`,
+        }}
       />
     );
   }
