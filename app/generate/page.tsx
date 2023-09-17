@@ -17,14 +17,8 @@ import {
 import { Textarea } from "@/components/ui/textarea";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { useCallback, useMemo, useState } from "react";
-import {
-  FetchLifecycleType,
-  QrGenerateRequest,
-  QrGenerateResponse,
-} from "@/models/service";
-import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
-import { AlertCircle } from "lucide-react";
+import { useCallback, useState } from "react";
+import { FetchLifecycleType } from "@/models/service";
 import { QrCard } from "@/components/QrCard/QrCard";
 
 const generateFormSchema = z.object({
@@ -50,7 +44,7 @@ const GeneratePage: NextPage = () => {
     mode: "onChange",
   });
 
-  const handleSubmit = useCallback(async (values: GenerateFormValues) => {
+  const handleSubmit = useCallback((values: GenerateFormValues) => {
     // Generate N parallel requests.
     const newStates: FetchLifecycleType[] = [];
     for (let i = 0; i < NUM_PARALLEL_REQUESTS; i++) {
@@ -70,11 +64,11 @@ const GeneratePage: NextPage = () => {
 
     // Make parallel requests and handle loading, error states independently.
     newStates.forEach((state, idx) => {
-      try {
-        fetch("/api/generate", {
-          method: "POST",
-          body: JSON.stringify(state.request),
-        }).then(async (response) => {
+      fetch("/api/generate", {
+        method: "POST",
+        body: JSON.stringify(state.request),
+      })
+        .then(async (response) => {
           // Handle API errors.
           if (!response.ok || response.status !== 200) {
             const text = await response.text();
@@ -91,36 +85,31 @@ const GeneratePage: NextPage = () => {
             };
             return newStatuses;
           });
-        });
-      } catch (e) {
-        setFetchStates((prev) => {
-          const newStatuses = [...prev];
-          if (e instanceof Error) {
+        })
+        .catch((e) => {
+          setFetchStates((prev) => {
+            const newStatuses = [...prev];
+            if (e instanceof Error) {
+              newStatuses[idx] = {
+                ...prev[idx],
+                error: e,
+              };
+            }
+            return newStatuses;
+          });
+        })
+        .finally(() => {
+          setFetchStates((prev) => {
+            const newStatuses = [...prev];
             newStatuses[idx] = {
               ...prev[idx],
-              error: e,
+              isLoading: false,
             };
-          }
-          return newStatuses;
+            return newStatuses;
+          });
         });
-      } finally {
-        setFetchStates((prev) => {
-          const newStatuses = [...prev];
-          newStatuses[idx] = {
-            ...prev[idx],
-            isLoading: false,
-          };
-          return newStatuses;
-        });
-      }
     });
   }, []);
-
-  const errors = useMemo(
-    () =>
-      fetchStates.map((state) => state.error).filter((v) => !_.isUndefined(v)),
-    []
-  );
 
   const isLoading = _.findIndex(fetchStates, (state) => state.isLoading) !== -1;
 
@@ -170,17 +159,6 @@ const GeneratePage: NextPage = () => {
               <Button type="submit" disabled={isLoading}>
                 Generate
               </Button>
-              {errors.length > 0 && (
-                <Alert variant="destructive">
-                  <AlertCircle className="h-4 w-4" />
-                  <AlertTitle>Error</AlertTitle>
-                  <AlertDescription>
-                    {errors.map((v) => (
-                      <p>{v?.message ?? "Error"}</p>
-                    ))}
-                  </AlertDescription>
-                </Alert>
-              )}
             </div>
           </form>
         </Form>

@@ -8,11 +8,7 @@ export const QrCard: React.FC<QrCardProps> = ({
   state: { request, isLoading, error, response },
 }) => {
   if (isLoading) {
-    return (
-      <div className="col-span-1">
-        <p>Loading...</p>
-      </div>
-    );
+    return <div className="animate-pulse bg-gray-200 aspect-square w-full" />;
   }
 
   if (error) {
