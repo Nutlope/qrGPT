@@ -30,22 +30,30 @@ export async function POST(request: NextRequest) {
     }
   }
 
-  // Do not await the replicate request as this will block the server from responding.
-  const startTime = performance.now();
-  return replicateClient
-    .generateQrCode({
-      url: reqBody.url,
-      prompt: reqBody.prompt,
-    })
-    .then((imageUrl) => {
-      const endTime = performance.now();
+  const numVariants = reqBody.num_variants || 1;
 
-      const response: QrGenerateResponse = {
-        image_url: imageUrl,
-        model_latency_ms: Math.round(endTime - startTime),
-      };
-      return new Response(JSON.stringify(response), {
-        status: 200,
+  const startTime = performance.now();
+  const requests: Promise<string>[] = [];
+  for (let i = 0; i < numVariants; i++) {
+    const promise = async () => {
+      const response = replicateClient.generateQrCode({
+        url: reqBody.url,
+        prompt: reqBody.prompt,
       });
-    });
+      return response;
+    };
+    requests.push(promise());
+  }
+  const imageURLs = await Promise.all(requests);
+
+  const endTime = performance.now();
+  const durationMS = endTime - startTime;
+
+  const response: QrGenerateResponse = {
+    image_urls: imageURLs,
+    model_latency_ms: Math.round(durationMS),
+  };
+  return new Response(JSON.stringify(response), {
+    status: 200,
+  });
 }

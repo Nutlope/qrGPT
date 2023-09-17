@@ -1,16 +1,18 @@
 import { cn } from "@/lib/utils";
-import { FetchLifecycleType } from "@/models/service";
 import React from "react";
 
 type QrCardProps = {
   containerClassName?: string;
   id: number;
-  state: FetchLifecycleType;
+  isLoading?: boolean;
+  imageURL?: string;
 };
+
 export const QrCard: React.FC<QrCardProps> = ({
   containerClassName = "",
   id,
-  state: { request, isLoading, error, response },
+  isLoading = false,
+  imageURL,
 }) => {
   if (isLoading) {
     return (
@@ -26,29 +28,23 @@ export const QrCard: React.FC<QrCardProps> = ({
     );
   }
 
-  if (error) {
+  if (!imageURL) {
     return (
       <div className={containerClassName}>
-        <p>Error: {error.message}</p>
+        <p>Image URL not provided</p>
       </div>
     );
   }
 
-  if (response) {
-    return (
-      <div
-        className={cn(
-          containerClassName,
-          "flex flex-col justify-center items-center gap-y-2"
-        )}
-      >
-        <img src={response.image_url} className="w-full" />
-        <p className="text-gray-400 text-sm italic">
-          Option {id + 1} ({(response.model_latency_ms / 1000).toFixed(2)}s)
-        </p>
-      </div>
-    );
-  }
-
-  return <div className={containerClassName}>{request.prompt}</div>;
+  return (
+    <div
+      className={cn(
+        containerClassName,
+        "flex flex-col justify-center items-center gap-y-2"
+      )}
+    >
+      <img src={imageURL} className="w-full" />
+      <p className="text-gray-400 text-sm italic">Option {id + 1}</p>
+    </div>
+  );
 };
