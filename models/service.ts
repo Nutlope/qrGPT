@@ -21,3 +21,10 @@ export interface QrGenerateResponse {
    */
   model_latency_ms: number;
 }
+
+export type FetchLifecycleType = {
+  isLoading: boolean;
+  error: Error | null;
+  request: QrGenerateRequest;
+  response: QrGenerateResponse | null;
+};
