@@ -6,9 +6,34 @@ import Footer from '@/components/Footer';
 
 const inter = Inter({ subsets: ['latin'] });
 
+let title = 'QrGPT - QR Code Generator';
+let description = 'Generate your AI QR Code in seconds';
+let url = 'https://www.qrgpt.io';
+let ogimage = 'https://www.qrgpt.io/og-image.png';
+let sitename = 'qrGPT.io';
+
 export const metadata: Metadata = {
-  title: 'QrGPT - QR Code Generator',
-  description: 'The premire QR code generator for the modern web.',
+  metadataBase: new URL(url),
+  title,
+  description,
+  icons: {
+    icon: '/favicon.ico',
+  },
+  openGraph: {
+    images: [ogimage],
+    title,
+    description,
+    url: url,
+    siteName: sitename,
+    locale: 'en_US',
+    type: 'website',
+  },
+  twitter: {
+    card: 'summary_large_image',
+    images: [ogimage],
+    title,
+    description,
+  },
 };
 
 export default function RootLayout({

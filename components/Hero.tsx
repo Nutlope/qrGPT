@@ -3,7 +3,7 @@
 import Image from 'next/image';
 import NavLink from './NavLink';
 
-let heroImages = ['/1.png', '/2.png', '/3.png', '/4.png', '/5.png', '/6.png'];
+let heroImages = ['/1.png', '/6.png', '/3.png', '/4.png', '/5.png', '/2.png'];
 
 export default function Hero() {
   return (
@@ -19,7 +19,7 @@ export default function Hero() {
           </p>
           <div className="flex items-center justify-center gap-x-3 font-medium text-sm">
             <NavLink
-              href="/get-started"
+              href="/generate"
               className="text-white bg-gray-800 hover:bg-gray-600 active:bg-gray-900 "
             >
               Generate your QR Code

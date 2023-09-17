@@ -14,7 +14,7 @@ const CTA = () => (
           Generate your first AI QR Code today, 100% free.
         </p>
         <NavLink
-          href="/get-started"
+          href="/generate"
           className="mt-4 inline-block font-medium text-sm text-white bg-gray-800 hover:bg-gray-600 active:bg-gray-900"
         >
           Generate your AI QR Code
