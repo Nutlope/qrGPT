@@ -1,6 +1,8 @@
-import { replicateClient } from "@/api/replicate/ReplicateClient";
-import { QrGenerateRequest, QrGenerateResponse } from "@/models/service";
-import { NextRequest } from "next/server";
+import { replicateClient } from '@/api/replicate/ReplicateClient';
+import { QrGenerateRequest, QrGenerateResponse } from '@/models/service';
+import { NextRequest } from 'next/server';
+import { Ratelimit } from '@upstash/ratelimit';
+import { kv } from '@vercel/kv';
 
 /**
  * Validates a request object.
@@ -8,20 +10,36 @@ import { NextRequest } from "next/server";
  * @param {QrGenerateRequest} request - The request object to be validated.
  * @throws {Error} Error message if URL or prompt is missing.
  */
+
 const validateRequest = (request: QrGenerateRequest) => {
   if (!request.url) {
-    throw new Error("URL is required");
+    throw new Error('URL is required');
   }
-
   if (!request.prompt) {
-    throw new Error("Prompt is required");
+    throw new Error('Prompt is required');
   }
 };
+
+const ratelimit = new Ratelimit({
+  redis: kv,
+  // Allow 5 requests from the same IP in 1 day.
+  limiter: Ratelimit.slidingWindow(5, '1 d'),
+});
 
 export async function POST(request: NextRequest) {
   const reqBody = (await request.json()) as QrGenerateRequest;
 
-  // Validate the request.
+  const ip = request.ip ?? '127.0.0.1';
+  const { success, remaining } = await ratelimit.limit(ip);
+
+  console.log('Remaining generations: ', remaining);
+
+  if (!success) {
+    return new Response('Too many requests', {
+      status: 429,
+    });
+  }
+
   try {
     validateRequest(reqBody);
   } catch (e) {
