@@ -30,18 +30,22 @@ export async function POST(request: NextRequest) {
     }
   }
 
+  // Do not await the replicate request as this will block the server from responding.
   const startTime = performance.now();
-  const imageUrl = await replicateClient.generateQrCode({
-    url: reqBody.url,
-    prompt: reqBody.prompt,
-  });
-  const endTime = performance.now();
+  return replicateClient
+    .generateQrCode({
+      url: reqBody.url,
+      prompt: reqBody.prompt,
+    })
+    .then((imageUrl) => {
+      const endTime = performance.now();
 
-  const response: QrGenerateResponse = {
-    image_url: imageUrl,
-    model_latency_ms: Math.round(endTime - startTime),
-  };
-  return new Response(JSON.stringify(response), {
-    status: 200,
-  });
+      const response: QrGenerateResponse = {
+        image_url: imageUrl,
+        model_latency_ms: Math.round(endTime - startTime),
+      };
+      return new Response(JSON.stringify(response), {
+        status: 200,
+      });
+    });
 }
