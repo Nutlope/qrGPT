@@ -4,7 +4,10 @@ const CTA = () => (
   <SectionWrapper>
     <div className="custom-screen">
       <div className="max-w-2xl mx-auto text-center">
-        <h2 className="text-gray-800 text-3xl font-semibold sm:text-4xl">
+        <h2
+          className="text-gray-800 text-3xl font-semibold sm:text-4xl"
+          id="cta"
+        >
           Get started with QrGPT today
         </h2>
         <p className="mt-3 text-gray-600">
