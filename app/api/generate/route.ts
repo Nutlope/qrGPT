@@ -36,7 +36,6 @@ export async function POST(request: NextRequest) {
     prompt: reqBody.prompt,
   });
   const endTime = performance.now();
-  console.log(`[Replicate] QR code generated in ${endTime - startTime}ms`);
 
   const response: QrGenerateResponse = {
     image_url: imageUrl,
