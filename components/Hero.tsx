@@ -32,7 +32,7 @@ export default function Hero() {
               Learn more
             </NavLink>
           </div>
-          <div className="grid grid-cols-3 gap-4 pt-10">
+          <div className="grid sm:grid-cols-3 grid-cols-2 gap-4 pt-10">
             {heroImages.map((image) => (
               <Image
                 alt="image"

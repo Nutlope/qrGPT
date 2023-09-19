@@ -19,21 +19,16 @@ import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { useCallback, useState } from 'react';
 import { QrGenerateRequest, QrGenerateResponse } from '@/utils/service';
-import { QrCard } from '@/components/QrCard/QrCard';
+import { QrCard } from '@/components/QrCard';
 import { AlertCircle } from 'lucide-react';
 import { Alert, AlertTitle, AlertDescription } from '@/components/ui/alert';
 
 const generateFormSchema = z.object({
-  url: z.string().url(),
+  url: z.string(),
   prompt: z.string().max(160).min(4),
 });
 
 type GenerateFormValues = z.infer<typeof generateFormSchema>;
-
-const defaultValues: Partial<GenerateFormValues> = {
-  url: 'https://www.qrgpt.io',
-  prompt: 'a sleek, modern computer circuit with muted colors',
-};
 
 const NUM_PARALLEL_REQUESTS = 1;
 
@@ -45,7 +40,6 @@ const GeneratePage: NextPage = () => {
 
   const form = useForm<GenerateFormValues>({
     resolver: zodResolver(generateFormSchema),
-    defaultValues,
     mode: 'onChange',
   });
 
@@ -96,7 +90,7 @@ const GeneratePage: NextPage = () => {
                     <FormItem>
                       <FormLabel>URL</FormLabel>
                       <FormControl>
-                        <Input placeholder="shadcn" {...field} />
+                        <Input placeholder="roomgpt.io" {...field} />
                       </FormControl>
                       <FormDescription>
                         This is what your QR code will link to.
@@ -113,7 +107,7 @@ const GeneratePage: NextPage = () => {
                       <FormLabel>Prompt</FormLabel>
                       <FormControl>
                         <Textarea
-                          placeholder="Enter a prompt"
+                          placeholder="A city view with clouds"
                           className="resize-none"
                           {...field}
                         />
@@ -141,9 +135,9 @@ const GeneratePage: NextPage = () => {
           </Form>
         </div>
         <div className="col-span-1">
-          <h2>Results</h2>
           {response && submittedURL && (
             <>
+              <h1 className="text-3xl font-bold mb-10">Results</h1>
               <p className="text-gray-500 text-sm mb-4">
                 QR code{NUM_PARALLEL_REQUESTS > 1 ? 's' : ''} took{' '}
                 {(response.model_latency_ms / 1000).toFixed(2)} seconds

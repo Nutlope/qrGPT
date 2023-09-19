@@ -23,7 +23,7 @@ const validateRequest = (request: QrGenerateRequest) => {
 const ratelimit = new Ratelimit({
   redis: kv,
   // Allow 5 requests from the same IP in 1 day.
-  limiter: Ratelimit.slidingWindow(5, '1 d'),
+  limiter: Ratelimit.slidingWindow(10, '1 d'),
 });
 
 export async function POST(request: NextRequest) {
@@ -35,7 +35,7 @@ export async function POST(request: NextRequest) {
   console.log('Remaining generations: ', remaining);
 
   if (!success) {
-    return new Response('Too many requests', {
+    return new Response('Too many requests. Please try again after 24h.', {
       status: 429,
     });
   }
@@ -57,6 +57,8 @@ export async function POST(request: NextRequest) {
       const response = replicateClient.generateQrCode({
         url: reqBody.url,
         prompt: reqBody.prompt,
+        qr_conditioning_scale: 1.3,
+        num_inference_steps: 20,
       });
       return response;
     };

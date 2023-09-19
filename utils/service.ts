@@ -10,6 +10,17 @@ export interface QrGenerateRequest {
   prompt: string;
 
   /**
+   * Conditioning scale for qr controlnet
+   */
+  qr_conditioning_scale?: number;
+
+  /**
+   * Steps to run denoising
+   */
+
+  num_inference_steps?: number;
+
+  /**
    * Number of variants to generate.
    *
    * Note: Generating more variants will take longer.
