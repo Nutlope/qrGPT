@@ -23,7 +23,8 @@ const validateRequest = (request: QrGenerateRequest) => {
 const ratelimit = new Ratelimit({
   redis: kv,
   // Allow 5 requests from the same IP in 1 day.
-  limiter: Ratelimit.slidingWindow(10, '1 d'),
+  // TODO: Change this back to 10
+  limiter: Ratelimit.slidingWindow(100, '1 d'),
 });
 
 export async function POST(request: NextRequest) {
@@ -57,8 +58,11 @@ export async function POST(request: NextRequest) {
       const response = replicateClient.generateQrCode({
         url: reqBody.url,
         prompt: reqBody.prompt,
-        qr_conditioning_scale: 1.3,
-        num_inference_steps: 20,
+        qr_conditioning_scale: 2,
+        num_inference_steps: 30,
+        guidance_scale: 5,
+        negative_prompt:
+          'Longbody, lowres, bad anatomy, bad hands, missing fingers, extra digit, fewer digits, cropped, worst quality, low quality, blurry',
       });
       return response;
     };

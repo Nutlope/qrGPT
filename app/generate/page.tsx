@@ -22,6 +22,7 @@ import { QrGenerateRequest, QrGenerateResponse } from '@/utils/service';
 import { QrCard } from '@/components/QrCard';
 import { AlertCircle } from 'lucide-react';
 import { Alert, AlertTitle, AlertDescription } from '@/components/ui/alert';
+import LoadingDots from '@/components/ui/loadingdots';
 
 const generateFormSchema = z.object({
   url: z.string(),
@@ -77,7 +78,7 @@ const GeneratePage: NextPage = () => {
 
   return (
     <div className="flex justify-center items-center flex-col w-full lg:p-0 p-4">
-      <div className="max-w-5xl w-full grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-12">
+      <div className="max-w-6xl w-full grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-12 mt-10">
         <div className="col-span-1">
           <h1 className="text-3xl font-bold mb-10">Generate a QR Code</h1>
           <Form {...form}>
@@ -120,7 +121,7 @@ const GeneratePage: NextPage = () => {
                   )}
                 />
                 <Button type="submit" disabled={isLoading}>
-                  Generate
+                  {isLoading ? <LoadingDots color="white" /> : 'Generate'}
                 </Button>
 
                 {error && (
@@ -138,19 +139,19 @@ const GeneratePage: NextPage = () => {
           {response && submittedURL && (
             <>
               <h1 className="text-3xl font-bold mb-10">Results</h1>
-              <p className="text-gray-500 text-sm mb-4">
-                QR code{NUM_PARALLEL_REQUESTS > 1 ? 's' : ''} took{' '}
-                {(response.model_latency_ms / 1000).toFixed(2)} seconds
-              </p>
               <div className="grid grid-cols-1 gap-8">
                 {response.image_urls.map((imageURL, idx) => (
                   <QrCard
                     key={`${imageURL}-${idx}`}
                     id={idx}
-                    href={submittedURL}
                     imageURL={imageURL}
+                    time={(response.model_latency_ms / 1000).toFixed(2)}
                   />
                 ))}
+                <div className="flex justify-center gap-5">
+                  <Button>Download</Button>
+                  <Button variant="outline">✨ Regenerate</Button>
+                </div>
               </div>
             </>
           )}

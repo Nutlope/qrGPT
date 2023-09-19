@@ -1,21 +1,20 @@
 import { cn } from '@/utils/utils';
 import React, { useState } from 'react';
-import { Button } from './ui/button';
 
 type QrCardProps = {
   containerClassName?: string;
   id: number;
   isLoading?: boolean;
-  href: string;
   imageURL?: string;
+  time: string;
 };
 
 export const QrCard: React.FC<QrCardProps> = ({
   containerClassName = '',
   id,
   isLoading = false,
-  href,
   imageURL,
+  time,
 }) => {
   const [isHovering, setIsHovering] = useState(false);
 
@@ -47,23 +46,8 @@ export const QrCard: React.FC<QrCardProps> = ({
         containerClassName,
         'flex flex-col justify-center relative h-auto items-center border border-gray-300 rounded p-2 shadow group'
       )}
-      onMouseEnter={() => setIsHovering(true)}
-      onMouseLeave={() => setIsHovering(false)}
     >
       <div className="relative flex flex-col justify-center items-center gap-y-2">
-        <div
-          className={cn(
-            'absolute w-[80%] h-[80%] border-4 border-red-500 border-dashed rounded left-[10%] top-[10%] z-10 flex flex-col items-center justify-center gap-y-4',
-            isHovering ? 'opacity-100' : 'opacity-0'
-          )}
-        >
-          <a href={imageURL} download target="_blank">
-            <Button>Download Image</Button>
-          </a>
-          <a href={href} target="_blank">
-            <Button>Open Link</Button>
-          </a>
-        </div>
         <img
           src={imageURL}
           className={cn(
@@ -71,7 +55,9 @@ export const QrCard: React.FC<QrCardProps> = ({
             isHovering ? 'saturate-50 brightness-75' : ''
           )}
         />
-        <p className="text-gray-400 text-sm italic">Option {id + 1}</p>
+        <p className="text-gray-400 text-sm italic">
+          QR code took {time} seconds to generate.
+        </p>
       </div>
     </div>
   );
