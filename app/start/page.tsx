@@ -26,7 +26,7 @@ import LoadingDots from '@/components/ui/loadingdots';
 
 const generateFormSchema = z.object({
   url: z.string(),
-  prompt: z.string().max(160).min(4),
+  prompt: z.string().max(160),
 });
 
 type GenerateFormValues = z.infer<typeof generateFormSchema>;
@@ -46,6 +46,7 @@ const GeneratePage: NextPage = () => {
 
   const handleSubmit = useCallback(async (values: GenerateFormValues) => {
     setIsLoading(true);
+    setResponse(null);
     setSubmittedURL(values.url);
 
     try {
@@ -136,18 +137,22 @@ const GeneratePage: NextPage = () => {
           </Form>
         </div>
         <div className="col-span-1">
-          {response && submittedURL && (
+          {submittedURL && (
             <>
               <h1 className="text-3xl font-bold mb-10">Results</h1>
-              <div className="grid grid-cols-1 gap-8">
-                {response.image_urls.map((imageURL, idx) => (
-                  <QrCard
-                    key={`${imageURL}-${idx}`}
-                    id={idx}
-                    imageURL={imageURL}
-                    time={(response.model_latency_ms / 1000).toFixed(2)}
-                  />
-                ))}
+              <div className="grid grid-cols-1 gap-4">
+                {response ? (
+                  response.image_urls.map((imageURL, idx) => (
+                    <QrCard
+                      key={`${imageURL}-${idx}`}
+                      id={idx}
+                      imageURL={imageURL}
+                      time={(response.model_latency_ms / 1000).toFixed(2)}
+                    />
+                  ))
+                ) : (
+                  <div className="animate-pulse bg-gray-200 aspect-square rounded w-[552px] h-[580px]" />
+                )}
                 <div className="flex justify-center gap-5">
                   <Button>Download</Button>
                   <Button variant="outline">✨ Regenerate</Button>

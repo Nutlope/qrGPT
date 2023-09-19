@@ -1,5 +1,4 @@
 import { cn } from '@/utils/utils';
-import React, { useState } from 'react';
 
 type QrCardProps = {
   containerClassName?: string;
@@ -16,8 +15,6 @@ export const QrCard: React.FC<QrCardProps> = ({
   imageURL,
   time,
 }) => {
-  const [isHovering, setIsHovering] = useState(false);
-
   if (isLoading) {
     return (
       <div
@@ -48,13 +45,7 @@ export const QrCard: React.FC<QrCardProps> = ({
       )}
     >
       <div className="relative flex flex-col justify-center items-center gap-y-2">
-        <img
-          src={imageURL}
-          className={cn(
-            'w-full rounded',
-            isHovering ? 'saturate-50 brightness-75' : ''
-          )}
-        />
+        <img src={imageURL} className="w-full rounded" />
         <p className="text-gray-400 text-sm italic">
           QR code took {time} seconds to generate.
         </p>
