@@ -174,16 +174,12 @@ const GeneratePage: NextPage = () => {
               </h1>
               <div className="grid grid-cols-1 gap-4">
                 {response ? (
-                  response.image_urls.map((imageURL, idx) => (
-                    <QrCard
-                      key={`${imageURL}-${idx}`}
-                      id={idx}
-                      imageURL={imageURL}
-                      time={(response.model_latency_ms / 1000).toFixed(2)}
-                    />
-                  ))
+                  <QrCard
+                    imageURL={response.image_urls[0]}
+                    time={(response.model_latency_ms / 1000).toFixed(2)}
+                  />
                 ) : (
-                  <div className="animate-pulse bg-gray-400 aspect-square rounded max-w-[552px] max-h-[580px]" />
+                  <div className="animate-pulse bg-gray-400 aspect-square rounded max-w-[510px] max-h-[510px]" />
                 )}
                 {response && (
                   <div className="flex justify-center gap-5 mt-[7px]">
