@@ -140,7 +140,9 @@ const GeneratePage: NextPage = () => {
         <div className="col-span-1">
           {submittedURL && (
             <>
-              <h1 className="text-3xl font-bold mb-10">Your QR Code</h1>
+              <h1 className="text-3xl font-bold sm:mb-10 mb-5 mt-5 sm:mt-0">
+                Your QR Code
+              </h1>
               <div className="grid grid-cols-1 gap-4">
                 {response ? (
                   response.image_urls.map((imageURL, idx) => (
