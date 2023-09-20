@@ -23,6 +23,7 @@ import { QrCard } from '@/components/QrCard';
 import { AlertCircle } from 'lucide-react';
 import { Alert, AlertTitle, AlertDescription } from '@/components/ui/alert';
 import LoadingDots from '@/components/ui/loadingdots';
+import downloadQrCode from '@/utils/downloadQrCode';
 
 const generateFormSchema = z.object({
   url: z.string(),
@@ -154,8 +155,19 @@ const GeneratePage: NextPage = () => {
                   <div className="animate-pulse bg-gray-200 aspect-square rounded w-[552px] h-[580px]" />
                 )}
                 <div className="flex justify-center gap-5">
-                  <Button>Download</Button>
-                  <Button variant="outline">✨ Regenerate</Button>
+                  <Button
+                    onClick={() =>
+                      downloadQrCode(response?.image_urls[0]!, 'qrCode')
+                    }
+                  >
+                    Download
+                  </Button>
+                  <Button
+                    variant="outline"
+                    onClick={form.handleSubmit(handleSubmit)}
+                  >
+                    ✨ Regenerate
+                  </Button>
                 </div>
               </div>
             </>
