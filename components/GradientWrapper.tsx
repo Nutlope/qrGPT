@@ -11,7 +11,7 @@ const GradientWrapper = ({ children, ...props }: any) => (
         background:
           'linear-gradient(202.72deg, rgba(237, 78, 80, 0.05) 14.76%, rgba(152, 103, 240, 0.04) 34.37%, rgba(152, 103, 240, 0) 86.62%)',
       }}
-    ></div>
+    />
     <div className="relative">{children}</div>
   </div>
 );

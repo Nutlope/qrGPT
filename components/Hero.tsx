@@ -25,7 +25,7 @@ export default function Hero() {
               Generate your QR Code
             </NavLink>
             <NavLink
-              href="#cta"
+              href="#oss"
               className="text-gray-700 border hover:bg-gray-50"
               scroll={false}
             >

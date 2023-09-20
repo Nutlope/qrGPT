@@ -2,27 +2,30 @@
 
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
-import Brand from './Brand';
 import NavLink from './NavLink';
 import Image from 'next/image';
+import { usePathname, useSearchParams } from 'next/navigation';
 
 const Navbar = () => {
   const [state, setState] = useState(false);
 
   const navigation = [
     // { title: 'Testimonials', path: '#testimonials' },
-    { title: 'Start Now', path: '#cta' },
+    { title: 'Home Page', path: '/' },
   ];
 
+  const pathname = usePathname();
+  const searchParams = useSearchParams();
+
   useEffect(() => {
-    // Close the navbar menu when navigate
+    // Add closing the navbar menu when navigating
     const handleState = () => {
       document.body.classList.remove('overflow-hidden');
       setState(false);
     };
-    // events.on('routeChangeStart', () => handleState());
-    // events.on('hashChangeStart', () => handleState());
-  }, []);
+
+    handleState();
+  }, [pathname, searchParams]);
 
   const handleNavMenu = () => {
     setState(!state);
@@ -105,7 +108,6 @@ const Navbar = () => {
                 </NavLink>
               </li>
             </ul>
-            {/* grid of images 4 in each row */}
           </div>
         </div>
       </nav>

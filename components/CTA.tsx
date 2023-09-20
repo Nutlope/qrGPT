@@ -4,7 +4,7 @@ const CTA = () => (
       <div className="max-w-2xl mx-auto text-center">
         <h2
           className="text-gray-800 text-3xl font-semibold sm:text-4xl"
-          id="cta"
+          id="oss"
         >
           QrGPT is Proudly Open Source
         </h2>

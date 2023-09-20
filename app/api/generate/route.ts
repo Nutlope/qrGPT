@@ -23,7 +23,6 @@ const validateRequest = (request: QrGenerateRequest) => {
 const ratelimit = new Ratelimit({
   redis: kv,
   // Allow 5 requests from the same IP in 1 day.
-  // TODO: Change this back to 10
   limiter: Ratelimit.slidingWindow(100, '1 d'),
 });
 

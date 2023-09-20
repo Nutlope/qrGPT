@@ -2,12 +2,11 @@
 
 ## Todos v1.5
 
-- [x] Add some sample prompts
-- [ ] Clean up codebase: remove the multi thing
+- [ ] Add Vercel blob to the project, along with Vercel KV based on Steven's project to save prompt + photo generated (although, don't make prompt unique)
+  - [ ] Add a new page for an automatic OG image when a new one gets generated
+- [ ] Change ratelimiting back to 10 seconds
 
 ## Todos v2
 
-- [ ] React hook form inconsistency
-- [ ] Add a new page for an automatic OG image when a new one gets generated
-- [ ] Add Vercel blob to the project, along with Vercel KV based on Steven's project
+- [ ] React hook form inconsistency – troubleshoot
 - [ ] Add 3-6 quick themes
