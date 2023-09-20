@@ -45,6 +45,20 @@ const GeneratePage: NextPage = () => {
     mode: 'onChange',
   });
 
+  function SuggestionBox({ suggestion }: { suggestion: string }) {
+    return (
+      <button
+        onClick={() => form.setValue('prompt', suggestion)}
+        disabled={isLoading}
+        className={`border p-2 rounded-2xl ${
+          !isLoading ? 'cursor-pointer' : 'cursor-not-allowed'
+        } hover:bg-gray-100 transition`}
+      >
+        {suggestion}
+      </button>
+    );
+  }
+
   const handleSubmit = useCallback(async (values: GenerateFormValues) => {
     setIsLoading(true);
     setResponse(null);
@@ -79,7 +93,7 @@ const GeneratePage: NextPage = () => {
   }, []);
 
   return (
-    <div className="flex justify-center items-center flex-col w-full lg:p-0 p-4">
+    <div className="flex justify-center items-center flex-col w-full lg:p-0 p-4 sm:mb-28 mb-0">
       <div className="max-w-6xl w-full grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-12 mt-10">
         <div className="col-span-1">
           <h1 className="text-3xl font-bold mb-10">Generate a QR Code</h1>
@@ -115,14 +129,29 @@ const GeneratePage: NextPage = () => {
                           {...field}
                         />
                       </FormControl>
-                      <FormDescription>
+                      <FormDescription className="">
                         This is what the image in your QR code will look like.
                       </FormDescription>
+
                       <FormMessage />
                     </FormItem>
                   )}
                 />
-                <Button type="submit" disabled={isLoading}>
+                <div className="my-2">
+                  <p className="text-sm font-medium mb-3">Prompt suggestions</p>
+                  <div className="grid sm:grid-cols-2 grid-cols-1 gap-3 text-center text-gray-500 text-sm">
+                    <SuggestionBox suggestion="A city view with clouds" />
+                    <SuggestionBox suggestion="A beautiful glacier" />
+                    <SuggestionBox suggestion="A forest overlooking a mountain" />
+                    <SuggestionBox suggestion="A saharan desert" />
+                  </div>
+                </div>
+                <Button
+                  type="submit"
+                  disabled={isLoading}
+                  className="inline-flex justify-center
+                 max-w-[200px] mx-auto w-full"
+                >
                   {isLoading ? <LoadingDots color="white" /> : 'Generate'}
                 </Button>
 
@@ -140,7 +169,7 @@ const GeneratePage: NextPage = () => {
         <div className="col-span-1">
           {submittedURL && (
             <>
-              <h1 className="text-3xl font-bold sm:mb-10 mb-5 mt-5 sm:mt-0">
+              <h1 className="text-3xl font-bold sm:mb-5 mb-5 mt-5 sm:mt-0 sm:text-center text-left">
                 Your QR Code
               </h1>
               <div className="grid grid-cols-1 gap-4">
@@ -154,23 +183,25 @@ const GeneratePage: NextPage = () => {
                     />
                   ))
                 ) : (
-                  <div className="animate-pulse bg-gray-200 aspect-square rounded w-[552px] h-[580px]" />
+                  <div className="animate-pulse bg-gray-400 aspect-square rounded max-w-[552px] max-h-[580px]" />
                 )}
-                <div className="flex justify-center gap-5">
-                  <Button
-                    onClick={() =>
-                      downloadQrCode(response?.image_urls[0]!, 'qrCode')
-                    }
-                  >
-                    Download
-                  </Button>
-                  <Button
-                    variant="outline"
-                    onClick={form.handleSubmit(handleSubmit)}
-                  >
-                    ✨ Regenerate
-                  </Button>
-                </div>
+                {response && (
+                  <div className="flex justify-center gap-5 mt-[7px]">
+                    <Button
+                      onClick={() =>
+                        downloadQrCode(response?.image_urls[0]!, 'qrCode')
+                      }
+                    >
+                      Download
+                    </Button>
+                    <Button
+                      variant="outline"
+                      onClick={form.handleSubmit(handleSubmit)}
+                    >
+                      ✨ Regenerate
+                    </Button>
+                  </div>
+                )}
               </div>
             </>
           )}
