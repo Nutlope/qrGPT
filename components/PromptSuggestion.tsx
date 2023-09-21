@@ -17,7 +17,7 @@ export const PromptSuggestion: React.FC<PromptSuggestionProps> = ({
       onClick={() => onClick()}
       disabled={isLoading}
       className={`border p-2 rounded-2xl ${
-        !isLoading ? "cursor-pointer" : "cursor-not-allowed"
+        !isLoading ? 'cursor-pointer' : 'cursor-not-allowed'
       } hover:bg-gray-100 transition`}
     >
       {suggestion}

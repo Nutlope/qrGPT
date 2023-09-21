@@ -1,10 +1,10 @@
-"use client";
+'use client';
 
-import { NextPage } from "next";
-import * as z from "zod";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
-import _ from "lodash";
+import { NextPage } from 'next';
+import * as z from 'zod';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { useForm } from 'react-hook-form';
+import _ from 'lodash';
 import {
   Form,
   FormControl,
@@ -13,26 +13,26 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from "@/components/ui/form";
-import { Textarea } from "@/components/ui/textarea";
-import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
-import { useCallback, useState } from "react";
-import { QrGenerateRequest, QrGenerateResponse } from "@/utils/service";
-import { QrCard } from "@/components/QrCard";
-import { AlertCircle } from "lucide-react";
-import { Alert, AlertTitle, AlertDescription } from "@/components/ui/alert";
-import LoadingDots from "@/components/ui/loadingdots";
-import downloadQrCode from "@/utils/downloadQrCode";
-import va from "@vercel/analytics";
-import { useRouter } from "next/navigation";
-import { PromptSuggestion } from "@/components/PromptSuggestion";
+} from '@/components/ui/form';
+import { Textarea } from '@/components/ui/textarea';
+import { Input } from '@/components/ui/input';
+import { Button } from '@/components/ui/button';
+import { useCallback, useState } from 'react';
+import { QrGenerateRequest, QrGenerateResponse } from '@/utils/service';
+import { QrCard } from '@/components/QrCard';
+import { AlertCircle } from 'lucide-react';
+import { Alert, AlertTitle, AlertDescription } from '@/components/ui/alert';
+import LoadingDots from '@/components/ui/loadingdots';
+import downloadQrCode from '@/utils/downloadQrCode';
+import va from '@vercel/analytics';
+import { useRouter } from 'next/navigation';
+import { PromptSuggestion } from '@/components/PromptSuggestion';
 
 const promptSuggestions = [
-  "A city view with clouds",
-  "A beautiful glacier",
-  "A forest overlooking a mountain",
-  "A saharan desert",
+  'A city view with clouds',
+  'A beautiful glacier',
+  'A forest overlooking a mountain',
+  'A saharan desert',
 ];
 
 const generateFormSchema = z.object({
@@ -50,20 +50,20 @@ const GeneratePage: NextPage = () => {
 
   const form = useForm<GenerateFormValues>({
     resolver: zodResolver(generateFormSchema),
-    mode: "onChange",
+    mode: 'onChange',
 
     // Set default values so that the form inputs are controlled components.
     defaultValues: {
-      url: "",
-      prompt: "",
+      url: '',
+      prompt: '',
     },
   });
 
   const handleSuggestionClick = useCallback(
     (suggestion: string) => {
-      form.setValue("prompt", suggestion);
+      form.setValue('prompt', suggestion);
     },
-    [form]
+    [form],
   );
 
   const handleSubmit = useCallback(async (values: GenerateFormValues) => {
@@ -76,8 +76,8 @@ const GeneratePage: NextPage = () => {
         url: values.url,
         prompt: values.prompt,
       };
-      const response = await fetch("/api/generate", {
-        method: "POST",
+      const response = await fetch('/api/generate', {
+        method: 'POST',
         body: JSON.stringify(request),
       });
 
@@ -90,13 +90,13 @@ const GeneratePage: NextPage = () => {
       const data = await response.json();
       setResponse(data);
 
-      va.track("Generated QR Code", {
+      va.track('Generated QR Code', {
         prompt: values.prompt,
       });
 
       // router.push(`/s/${data.id}`);
     } catch (error) {
-      va.track("Failed to generate", {
+      va.track('Failed to generate', {
         prompt: values.prompt,
       });
       if (error instanceof Error) {
@@ -171,7 +171,7 @@ const GeneratePage: NextPage = () => {
                   className="inline-flex justify-center
                  max-w-[200px] mx-auto w-full"
                 >
-                  {isLoading ? <LoadingDots color="white" /> : "Generate"}
+                  {isLoading ? <LoadingDots color="white" /> : 'Generate'}
                 </Button>
 
                 {error && (
@@ -206,7 +206,7 @@ const GeneratePage: NextPage = () => {
                   <div className="flex justify-center gap-5 mt-4">
                     <Button
                       onClick={() =>
-                        downloadQrCode(response.image_url, "qrCode")
+                        downloadQrCode(response.image_url, 'qrCode')
                       }
                     >
                       Download
