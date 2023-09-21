@@ -4,7 +4,7 @@
 
 ## Todos v1.5
 
-- [ ] Add a new page for an automatic OG image when a new one gets generated
-- [ ] Set up cron to run every 2 mins to hit this endpoint
-- [ ] React hook form inconsistency – troubleshoot
+- [ ] Test out the new <Body> and maybe take out the setResponse() and only send back ID from api route + anything else that needs to be changed
+- [ ] Add share button on the dynamic page. Replace generate with "regenerate" when user has pic on the screen, then add share button where regenerate is now
 - [ ] Setup README and Vercel template
+- [ ] Random prompt suggestions

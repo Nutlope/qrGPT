@@ -34,7 +34,7 @@ export async function POST(request: NextRequest) {
   const ip = request.ip ?? '127.0.0.1';
   const { success } = await ratelimit.limit(ip);
 
-  if (!success) {
+  if (!success && process.env.NODE_ENV !== 'development') {
     return new Response('Too many requests. Please try again after 24h.', {
       status: 429,
     });
@@ -73,6 +73,8 @@ export async function POST(request: NextRequest) {
   await kv.hset(id, {
     prompt: reqBody.prompt,
     image: url,
+    website_url: reqBody.url,
+    model_latency: Math.round(durationMS),
   });
 
   const response: QrGenerateResponse = {
