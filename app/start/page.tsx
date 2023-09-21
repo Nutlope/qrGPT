@@ -24,6 +24,8 @@ import { AlertCircle } from 'lucide-react';
 import { Alert, AlertTitle, AlertDescription } from '@/components/ui/alert';
 import LoadingDots from '@/components/ui/loadingdots';
 import downloadQrCode from '@/utils/downloadQrCode';
+import va from '@vercel/analytics';
+import { useRouter } from 'next/navigation';
 
 const generateFormSchema = z.object({
   url: z.string(),
@@ -32,13 +34,14 @@ const generateFormSchema = z.object({
 
 type GenerateFormValues = z.infer<typeof generateFormSchema>;
 
-const NUM_PARALLEL_REQUESTS = 1;
-
 const GeneratePage: NextPage = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<Error | null>(null);
   const [response, setResponse] = useState<QrGenerateResponse | null>(null);
   const [submittedURL, setSubmittedURL] = useState<string | null>(null);
+
+  const router = useRouter();
+  console.log({ response });
 
   const form = useForm<GenerateFormValues>({
     resolver: zodResolver(generateFormSchema),
@@ -48,7 +51,10 @@ const GeneratePage: NextPage = () => {
   function SuggestionBox({ suggestion }: { suggestion: string }) {
     return (
       <button
-        onClick={() => form.setValue('prompt', suggestion)}
+        onClick={() => {
+          console.log('clicked');
+          form.setValue('prompt', suggestion);
+        }}
         disabled={isLoading}
         className={`border p-2 rounded-2xl ${
           !isLoading ? 'cursor-pointer' : 'cursor-not-allowed'
@@ -68,7 +74,6 @@ const GeneratePage: NextPage = () => {
       const request: QrGenerateRequest = {
         url: values.url,
         prompt: values.prompt,
-        num_variants: NUM_PARALLEL_REQUESTS,
       };
       const response = await fetch('/api/generate', {
         method: 'POST',
@@ -78,12 +83,21 @@ const GeneratePage: NextPage = () => {
       // Handle API errors.
       if (!response.ok || response.status !== 200) {
         const text = await response.text();
-        throw new Error(`Failed to generate QR code: ${text}`);
+        throw new Error(`Failed to generate QR code: ${response.status}`);
       }
 
       const data = await response.json();
       setResponse(data);
+
+      va.track('Generated QR Code', {
+        prompt: values.prompt,
+      });
+
+      // router.push(`/s/${data.id}`);
     } catch (error) {
+      va.track('Failed to generate', {
+        prompt: values.prompt,
+      });
       if (error instanceof Error) {
         setError(error);
       }
@@ -172,20 +186,22 @@ const GeneratePage: NextPage = () => {
               <h1 className="text-3xl font-bold sm:mb-5 mb-5 mt-5 sm:mt-0 sm:text-center text-left">
                 Your QR Code
               </h1>
-              <div className="grid grid-cols-1 gap-4">
-                {response ? (
-                  <QrCard
-                    imageURL={response.image_urls[0]}
-                    time={(response.model_latency_ms / 1000).toFixed(2)}
-                  />
-                ) : (
-                  <div className="animate-pulse bg-gray-400 aspect-square rounded max-w-[510px] max-h-[510px]" />
-                )}
+              <div>
+                <div className="flex flex-col justify-center relative h-auto items-center">
+                  {response ? (
+                    <QrCard
+                      imageURL={response.image_url}
+                      time={(response.model_latency_ms / 1000).toFixed(2)}
+                    />
+                  ) : (
+                    <div className="relative flex flex-col justify-center items-center gap-y-2 w-[510px] border border-gray-300 rounded shadow group p-2 mx-auto animate-pulse bg-gray-400 aspect-square" />
+                  )}
+                </div>
                 {response && (
-                  <div className="flex justify-center gap-5 mt-[7px]">
+                  <div className="flex justify-center gap-5 mt-4">
                     <Button
                       onClick={() =>
-                        downloadQrCode(response?.image_urls[0]!, 'qrCode')
+                        downloadQrCode(response.image_url, 'qrCode')
                       }
                     >
                       Download

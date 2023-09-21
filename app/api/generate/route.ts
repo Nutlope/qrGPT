@@ -3,6 +3,8 @@ import { QrGenerateRequest, QrGenerateResponse } from '@/utils/service';
 import { NextRequest } from 'next/server';
 import { Ratelimit } from '@upstash/ratelimit';
 import { kv } from '@vercel/kv';
+import { put } from '@vercel/blob';
+import { nanoid } from '@/utils/utils';
 
 /**
  * Validates a request object.
@@ -32,8 +34,6 @@ export async function POST(request: NextRequest) {
   const ip = request.ip ?? '127.0.0.1';
   const { success, remaining } = await ratelimit.limit(ip);
 
-  console.log('Remaining generations: ', remaining);
-
   if (!success) {
     return new Response('Too many requests. Please try again after 24h.', {
       status: 429,
@@ -48,34 +48,39 @@ export async function POST(request: NextRequest) {
     }
   }
 
-  const numVariants = reqBody.num_variants || 1;
-
+  const id = nanoid();
   const startTime = performance.now();
-  const requests: Promise<string>[] = [];
-  for (let i = 0; i < numVariants; i++) {
-    const promise = async () => {
-      const response = replicateClient.generateQrCode({
-        url: reqBody.url,
-        prompt: reqBody.prompt,
-        qr_conditioning_scale: 2,
-        num_inference_steps: 30,
-        guidance_scale: 5,
-        negative_prompt:
-          'Longbody, lowres, bad anatomy, bad hands, missing fingers, extra digit, fewer digits, cropped, worst quality, low quality, blurry',
-      });
-      return response;
-    };
-    requests.push(promise());
-  }
-  const imageURLs = await Promise.all(requests);
+
+  let imageUrl = await replicateClient.generateQrCode({
+    url: reqBody.url,
+    prompt: reqBody.prompt,
+    qr_conditioning_scale: 2,
+    num_inference_steps: 30,
+    guidance_scale: 5,
+    negative_prompt:
+      'Longbody, lowres, bad anatomy, bad hands, missing fingers, extra digit, fewer digits, cropped, worst quality, low quality, blurry',
+  });
 
   const endTime = performance.now();
   const durationMS = endTime - startTime;
 
+  // convert output to a blob object
+  const file = await fetch(imageUrl).then((res) => res.blob());
+
+  // upload & store in Vercel Blob
+  const { url } = await put(`${id}.png`, file, { access: 'public' });
+
+  await kv.hset(id, {
+    prompt: reqBody.prompt,
+    image: url,
+  });
+
   const response: QrGenerateResponse = {
-    image_urls: imageURLs,
+    image_url: url,
     model_latency_ms: Math.round(durationMS),
+    id: id,
   };
+
   return new Response(JSON.stringify(response), {
     status: 200,
   });
