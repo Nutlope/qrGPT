@@ -34,8 +34,8 @@ const promptSuggestions = [
 ];
 
 const generateFormSchema = z.object({
-  url: z.string(),
-  prompt: z.string().max(160),
+  url: z.string().min(1),
+  prompt: z.string().min(3).max(160),
 });
 
 type GenerateFormValues = z.infer<typeof generateFormSchema>;
