@@ -4,7 +4,6 @@ import { NextPage } from 'next';
 import * as z from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
-import _ from 'lodash';
 import {
   Form,
   FormControl,
@@ -25,7 +24,6 @@ import { Alert, AlertTitle, AlertDescription } from '@/components/ui/alert';
 import LoadingDots from '@/components/ui/loadingdots';
 import downloadQrCode from '@/utils/downloadQrCode';
 import va from '@vercel/analytics';
-import { useRouter } from 'next/navigation';
 import { PromptSuggestion } from '@/components/PromptSuggestion';
 
 const promptSuggestions = [
@@ -84,7 +82,9 @@ const GeneratePage: NextPage = () => {
       // Handle API errors.
       if (!response.ok || response.status !== 200) {
         const text = await response.text();
-        throw new Error(`Failed to generate QR code: ${response.status}`);
+        throw new Error(
+          `Failed to generate QR code: ${response.status}, ${text}`,
+        );
       }
 
       const data = await response.json();

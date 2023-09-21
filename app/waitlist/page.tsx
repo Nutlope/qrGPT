@@ -13,7 +13,7 @@ export default function WaitlistPage() {
           Stop being sneaky and just wait for the launch.
         </h1>
         <h3 className="lg:text-xl text-lg text-gray-500 font-normal mt-5">
-          Thank you. It'll be out soon, I promise.
+          Thank you. It&apos;ll be out soon, I promise.
         </h3>
       </div>
     </div>
