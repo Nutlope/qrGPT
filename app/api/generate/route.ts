@@ -32,7 +32,7 @@ export async function POST(request: NextRequest) {
   const reqBody = (await request.json()) as QrGenerateRequest;
 
   const ip = request.ip ?? '127.0.0.1';
-  const { success, remaining } = await ratelimit.limit(ip);
+  const { success } = await ratelimit.limit(ip);
 
   if (!success) {
     return new Response('Too many requests. Please try again after 24h.', {

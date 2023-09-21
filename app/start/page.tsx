@@ -82,7 +82,9 @@ const GeneratePage: NextPage = () => {
       // Handle API errors.
       if (!response.ok || response.status !== 200) {
         const text = await response.text();
-        throw new Error(`Failed to generate QR code: ${response.status}`);
+        throw new Error(
+          `Failed to generate QR code: ${response.status}, ${text}`,
+        );
       }
 
       const data = await response.json();
