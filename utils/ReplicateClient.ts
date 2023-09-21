@@ -15,7 +15,7 @@ export class ReplicateClient {
    * Generate a QR code.
    */
   generateQrCode = async (
-    request: QrCodeControlNetRequest
+    request: QrCodeControlNetRequest,
   ): Promise<string> => {
     const output = (await this.replicate.run(
       'zylim0702/qr_code_controlnet:628e604e13cf63d8ec58bd4d238474e8986b054bc5e1326e50995fdbc851c557',
@@ -28,7 +28,7 @@ export class ReplicateClient {
           guidance_scale: request.guidance_scale,
           negative_prompt: request.negative_prompt,
         },
-      }
+      },
     )) as QrCodeControlNetResponse;
 
     if (!output) {
