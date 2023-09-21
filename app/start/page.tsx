@@ -1,10 +1,10 @@
-'use client';
+"use client";
 
-import { NextPage } from 'next';
-import * as z from 'zod';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { useForm } from 'react-hook-form';
-import _ from 'lodash';
+import { NextPage } from "next";
+import * as z from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useForm } from "react-hook-form";
+import _ from "lodash";
 import {
   Form,
   FormControl,
@@ -13,19 +13,27 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from '@/components/ui/form';
-import { Textarea } from '@/components/ui/textarea';
-import { Input } from '@/components/ui/input';
-import { Button } from '@/components/ui/button';
-import { useCallback, useState } from 'react';
-import { QrGenerateRequest, QrGenerateResponse } from '@/utils/service';
-import { QrCard } from '@/components/QrCard';
-import { AlertCircle } from 'lucide-react';
-import { Alert, AlertTitle, AlertDescription } from '@/components/ui/alert';
-import LoadingDots from '@/components/ui/loadingdots';
-import downloadQrCode from '@/utils/downloadQrCode';
-import va from '@vercel/analytics';
-import { useRouter } from 'next/navigation';
+} from "@/components/ui/form";
+import { Textarea } from "@/components/ui/textarea";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
+import { useCallback, useState } from "react";
+import { QrGenerateRequest, QrGenerateResponse } from "@/utils/service";
+import { QrCard } from "@/components/QrCard";
+import { AlertCircle } from "lucide-react";
+import { Alert, AlertTitle, AlertDescription } from "@/components/ui/alert";
+import LoadingDots from "@/components/ui/loadingdots";
+import downloadQrCode from "@/utils/downloadQrCode";
+import va from "@vercel/analytics";
+import { useRouter } from "next/navigation";
+import { PromptSuggestion } from "@/components/PromptSuggestion";
+
+const promptSuggestions = [
+  "A city view with clouds",
+  "A beautiful glacier",
+  "A forest overlooking a mountain",
+  "A saharan desert",
+];
 
 const generateFormSchema = z.object({
   url: z.string(),
@@ -40,30 +48,23 @@ const GeneratePage: NextPage = () => {
   const [response, setResponse] = useState<QrGenerateResponse | null>(null);
   const [submittedURL, setSubmittedURL] = useState<string | null>(null);
 
-  const router = useRouter();
-  console.log({ response });
-
   const form = useForm<GenerateFormValues>({
     resolver: zodResolver(generateFormSchema),
-    mode: 'onChange',
+    mode: "onChange",
+
+    // Set default values so that the form inputs are controlled components.
+    defaultValues: {
+      url: "",
+      prompt: "",
+    },
   });
 
-  function SuggestionBox({ suggestion }: { suggestion: string }) {
-    return (
-      <button
-        onClick={() => {
-          console.log('clicked');
-          form.setValue('prompt', suggestion);
-        }}
-        disabled={isLoading}
-        className={`border p-2 rounded-2xl ${
-          !isLoading ? 'cursor-pointer' : 'cursor-not-allowed'
-        } hover:bg-gray-100 transition`}
-      >
-        {suggestion}
-      </button>
-    );
-  }
+  const handleSuggestionClick = useCallback(
+    (suggestion: string) => {
+      form.setValue("prompt", suggestion);
+    },
+    [form]
+  );
 
   const handleSubmit = useCallback(async (values: GenerateFormValues) => {
     setIsLoading(true);
@@ -75,8 +76,8 @@ const GeneratePage: NextPage = () => {
         url: values.url,
         prompt: values.prompt,
       };
-      const response = await fetch('/api/generate', {
-        method: 'POST',
+      const response = await fetch("/api/generate", {
+        method: "POST",
         body: JSON.stringify(request),
       });
 
@@ -89,13 +90,13 @@ const GeneratePage: NextPage = () => {
       const data = await response.json();
       setResponse(data);
 
-      va.track('Generated QR Code', {
+      va.track("Generated QR Code", {
         prompt: values.prompt,
       });
 
       // router.push(`/s/${data.id}`);
     } catch (error) {
-      va.track('Failed to generate', {
+      va.track("Failed to generate", {
         prompt: values.prompt,
       });
       if (error instanceof Error) {
@@ -154,10 +155,14 @@ const GeneratePage: NextPage = () => {
                 <div className="my-2">
                   <p className="text-sm font-medium mb-3">Prompt suggestions</p>
                   <div className="grid sm:grid-cols-2 grid-cols-1 gap-3 text-center text-gray-500 text-sm">
-                    <SuggestionBox suggestion="A city view with clouds" />
-                    <SuggestionBox suggestion="A beautiful glacier" />
-                    <SuggestionBox suggestion="A forest overlooking a mountain" />
-                    <SuggestionBox suggestion="A saharan desert" />
+                    {promptSuggestions.map((suggestion) => (
+                      <PromptSuggestion
+                        key={suggestion}
+                        suggestion={suggestion}
+                        onClick={() => handleSuggestionClick(suggestion)}
+                        isLoading={isLoading}
+                      />
+                    ))}
                   </div>
                 </div>
                 <Button
@@ -166,7 +171,7 @@ const GeneratePage: NextPage = () => {
                   className="inline-flex justify-center
                  max-w-[200px] mx-auto w-full"
                 >
-                  {isLoading ? <LoadingDots color="white" /> : 'Generate'}
+                  {isLoading ? <LoadingDots color="white" /> : "Generate"}
                 </Button>
 
                 {error && (
@@ -201,7 +206,7 @@ const GeneratePage: NextPage = () => {
                   <div className="flex justify-center gap-5 mt-4">
                     <Button
                       onClick={() =>
-                        downloadQrCode(response.image_url, 'qrCode')
+                        downloadQrCode(response.image_url, "qrCode")
                       }
                     >
                       Download
