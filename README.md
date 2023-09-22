@@ -7,15 +7,14 @@
   Generate beautiful AI QR Codes in seconds. Powered by Vercel and Replicate.
 </p>
 
-<p align="center">
+<!-- <p align="center">
   <a href="https://twitter.com/nutlope">
     <img src="https://img.shields.io/twitter/follow/steventey?style=flat&label=nutlope&logo=twitter&color=0bf&logoColor=fff" alt="Hassan's Twitter follower count" />
   </a>
   <a href="https://twitter.com/kevinhou22">
     <img src="https://img.shields.io/twitter/follow/steventey?style=flat&label=kevinhou22&logo=twitter&color=0bf&logoColor=fff" alt="Kevin's Twitter follower count" />
   </a>
-
-</p>
+</p> -->
 <p align="center">
   <a href="https://codeium.com?repo_name=nutlope%2Fqrgpt">
     <img src="https://codeium.com/badges/main" alt="Hassan's Twitter follower count" />
