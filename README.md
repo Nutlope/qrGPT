@@ -14,6 +14,9 @@
   <a href="https://twitter.com/kevinhou22">
     <img src="https://img.shields.io/twitter/follow/steventey?style=flat&label=kevinhou22&logo=twitter&color=0bf&logoColor=fff" alt="Kevin's Twitter follower count" />
   </a>
+
+</p>
+<p align="center">
   <a href="https://codeium.com?repo_name=nutlope%2Fqrgpt">
     <img src="https://codeium.com/badges/main" alt="Hassan's Twitter follower count" />
   </a>
@@ -22,7 +25,8 @@
 <p align="center">
   <a href="#tech-stack"><strong>Tech Stack</strong></a> ·
   <a href="#deploy-your-own"><strong>Deploy Your Own</strong></a> ·
-  <a href="#author"><strong>Authors</strong></a>
+  <a href="#authors"><strong>Authors</strong></a> ·
+  <a href="#credits"><strong>Credits</strong></a>
 </p>
 <br/>
 
@@ -51,7 +55,7 @@ Note that you'll need to:
 - Hassan El Mghari ([@nutlope](https://twitter.com/steventey))
 - Kevin Hou ([@kevinhou22](https://twitter.com/kevinhou22))
 
-#### Credits
+## Credits
 
 - [Codium](https://codeium.com?repo_name=nutlope%2Fqrgpt) and [v0](https://v0.dev/) for quick prototyping and AI autocomplete
 - [Spirals](https://spirals.vercel.app/) for great code patterns and some code
