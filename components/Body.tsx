@@ -254,9 +254,7 @@ const Body = ({
                         navigator.clipboard.writeText(
                           `https://qrgpt.io/start/${id || ''}`,
                         );
-                        toast('Bio copied to clipboard', {
-                          icon: '✂️',
-                        });
+                        toast.success('Link copied to clipboard');
                       }}
                     >
                       ✂️ Share
