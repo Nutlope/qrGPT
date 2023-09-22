@@ -24,8 +24,8 @@ const validateRequest = (request: QrGenerateRequest) => {
 
 const ratelimit = new Ratelimit({
   redis: kv,
-  // Allow 15 requests from the same IP in 1 day.
-  limiter: Ratelimit.slidingWindow(15, '1 d'),
+  // Allow 20 requests from the same IP in 1 day.
+  limiter: Ratelimit.slidingWindow(20, '1 d'),
 });
 
 export async function POST(request: NextRequest) {
