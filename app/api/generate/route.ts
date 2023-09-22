@@ -1,7 +1,7 @@
 import { replicateClient } from '@/utils/ReplicateClient';
 import { QrGenerateRequest, QrGenerateResponse } from '@/utils/service';
 import { NextRequest } from 'next/server';
-import { Ratelimit } from '@upstash/ratelimit';
+// import { Ratelimit } from '@upstash/ratelimit';
 import { kv } from '@vercel/kv';
 import { put } from '@vercel/blob';
 import { nanoid } from '@/utils/utils';
@@ -22,23 +22,23 @@ const validateRequest = (request: QrGenerateRequest) => {
   }
 };
 
-const ratelimit = new Ratelimit({
-  redis: kv,
-  // Allow 20 requests from the same IP in 1 day.
-  limiter: Ratelimit.slidingWindow(20, '1 d'),
-});
+// const ratelimit = new Ratelimit({
+//   redis: kv,
+//   // Allow 20 requests from the same IP in 1 day.
+//   limiter: Ratelimit.slidingWindow(20, '1 d'),
+// });
 
 export async function POST(request: NextRequest) {
   const reqBody = (await request.json()) as QrGenerateRequest;
 
-  const ip = request.ip ?? '127.0.0.1';
-  const { success } = await ratelimit.limit(ip);
+  // const ip = request.ip ?? '127.0.0.1';
+  // const { success } = await ratelimit.limit(ip);
 
-  if (!success && process.env.NODE_ENV !== 'development') {
-    return new Response('Too many requests. Please try again after 24h.', {
-      status: 429,
-    });
-  }
+  // if (!success && process.env.NODE_ENV !== 'development') {
+  //   return new Response('Too many requests. Please try again after 24h.', {
+  //     status: 429,
+  //   });
+  // }
 
   try {
     validateRequest(reqBody);
