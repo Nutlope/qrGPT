@@ -51,11 +51,11 @@ Note that you'll need to:
 
 ## Authors
 
-- Hassan El Mghari ([@nutlope](https://twitter.com/steventey))
+- Hassan El Mghari ([@nutlope](https://twitter.com/nutlope))
 - Kevin Hou ([@kevinhou22](https://twitter.com/kevinhou22))
 
 ## Credits
 
-- [Codium](https://codeium.com?repo_name=nutlope%2Fqrgpt) and [v0](https://v0.dev/) for quick prototyping and AI autocomplete
+- [Codeium](https://codeium.com?repo_name=nutlope%2Fqrgpt) and [v0](https://v0.dev/) for quick prototyping and AI autocomplete
 - [Spirals](https://spirals.vercel.app/) for great code patterns and some code
 - [Lim Zi Yang](https://github.com/ZYLIM0702) for the original AI model
