@@ -25,6 +25,7 @@ import downloadQrCode from '@/utils/downloadQrCode';
 import va from '@vercel/analytics';
 import { PromptSuggestion } from '@/components/PromptSuggestion';
 import { useRouter } from 'next/navigation';
+import { toast, Toaster } from 'react-hot-toast';
 
 const promptSuggestions = [
   'A city view with clouds',
@@ -201,7 +202,13 @@ const Body = ({
                   className="inline-flex justify-center
                  max-w-[200px] mx-auto w-full"
                 >
-                  {isLoading ? <LoadingDots color="white" /> : 'Generate'}
+                  {isLoading ? (
+                    <LoadingDots color="white" />
+                  ) : response ? (
+                    '✨ Regenerate'
+                  ) : (
+                    'Generate'
+                  )}
                 </Button>
 
                 {error && (
@@ -243,9 +250,16 @@ const Body = ({
                     </Button>
                     <Button
                       variant="outline"
-                      onClick={form.handleSubmit(handleSubmit)}
+                      onClick={() => {
+                        navigator.clipboard.writeText(
+                          `https://qrgpt.io/start/${id || ''}`,
+                        );
+                        toast('Bio copied to clipboard', {
+                          icon: '✂️',
+                        });
+                      }}
                     >
-                      ✨ Regenerate
+                      ✂️ Share
                     </Button>
                   </div>
                 )}
@@ -254,6 +268,7 @@ const Body = ({
           )}
         </div>
       </div>
+      <Toaster />
     </div>
   );
 };
