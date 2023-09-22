@@ -78,6 +78,7 @@ const Body = ({
         model_latency_ms: modelLatency,
         id: id,
       });
+      setSubmittedURL(redirectUrl);
 
       form.setValue('prompt', prompt);
       form.setValue('url', redirectUrl);
@@ -116,7 +117,6 @@ const Body = ({
         }
 
         const data = await response.json();
-        setResponse(data);
 
         va.track('Generated QR Code', {
           prompt: values.prompt,
