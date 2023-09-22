@@ -236,7 +236,7 @@ const Body = ({
                       time={(response.model_latency_ms / 1000).toFixed(2)}
                     />
                   ) : (
-                    <div className="relative flex flex-col justify-center items-center gap-y-2 w-[510px] border border-gray-300 rounded shadow group p-2 mx-auto animate-pulse bg-gray-400 aspect-square" />
+                    <div className="relative flex flex-col justify-center items-center gap-y-2 w-[510px] border border-gray-300 rounded shadow group p-2 mx-auto animate-pulse bg-gray-400 aspect-square max-w-full" />
                   )}
                 </div>
                 {response && (

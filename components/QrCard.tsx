@@ -15,7 +15,7 @@ export const QrCard: React.FC<QrCardProps> = ({ imageURL, time }) => {
   }
 
   return (
-    <div className="relative flex flex-col justify-center items-center gap-y-2 max-w-[510px] border border-gray-300 rounded shadow group p-2 mx-auto">
+    <div className="relative flex flex-col justify-center items-center gap-y-2 w-[510px] border border-gray-300 rounded shadow group p-2 mx-auto max-w-full">
       <Image
         src={imageURL}
         className="rounded "
