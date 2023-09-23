@@ -128,7 +128,7 @@ const Body = ({
 
         const data = await response.json();
 
-        console.log('data ===>', data);
+        console.log('data ===>  ', data);
 
         va.track('Generated QR Code', {
           prompt: values.prompt,
