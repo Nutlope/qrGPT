@@ -11,6 +11,7 @@
   },
   "dependencies": {
     "@hookform/resolvers": "^3.3.1",
+    "@radix-ui/react-dropdown-menu": "^2.0.5",
     "@radix-ui/react-label": "^2.0.2",
     "@radix-ui/react-slot": "^1.0.2",
     "@tailwindcss/forms": "^0.5.6",
@@ -27,6 +28,7 @@
     "lucide-react": "^0.279.0",
     "nanoid": "^5.0.1",
     "next": "^13.5.2",
+    "next-themes": "^0.2.1",
     "postcss": "8.4.29",
     "prettier": "^3.0.3",
     "react": "18.2.0",

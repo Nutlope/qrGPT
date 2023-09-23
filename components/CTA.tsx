@@ -3,12 +3,12 @@ const CTA = () => (
     <div className="custom-screen">
       <div className="max-w-2xl mx-auto text-center">
         <h2
-          className="text-gray-800 text-3xl font-semibold sm:text-4xl"
+          className="text-gray-800 dark:text-white text-3xl font-semibold sm:text-4xl"
           id="oss"
         >
           QrGPT is Proudly Open Source
         </h2>
-        <p className="mt-3 text-gray-600">
+        <p className="mt-3 text-gray-600 dark:text-white">
           Our source code is available on GitHub.
         </p>
         <a
