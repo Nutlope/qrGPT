@@ -3,7 +3,7 @@ const nextConfig = {
   images: {
     domains: [
       'pbxt.replicate.delivery',
-      'g4yqcv8qdhf169fk.public.blob.vercel-storage.com',
+      'qsvlk7deextqu1un.public.blob.vercel-storage.com',
     ],
   },
 };

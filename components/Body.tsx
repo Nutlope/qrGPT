@@ -59,6 +59,15 @@ const Body = ({
   const [response, setResponse] = useState<QrGenerateResponse | null>(null);
   const [submittedURL, setSubmittedURL] = useState<string | null>(null);
 
+  console.log('props ===>', {
+    imageUrl,
+    prompt,
+    redirectUrl,
+    modelLatency,
+    id,
+    response,
+  });
+
   const router = useRouter();
 
   const form = useForm<GenerateFormValues>({
@@ -118,6 +127,8 @@ const Body = ({
         }
 
         const data = await response.json();
+
+        console.log('data ===>', data);
 
         va.track('Generated QR Code', {
           prompt: values.prompt,

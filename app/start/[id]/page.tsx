@@ -22,6 +22,8 @@ export async function generateMetadata({
   };
 }): Promise<Metadata | undefined> {
   const data = await getAllKv(params.id);
+
+  console.log('xxx data', data);
   if (!data) {
     return;
   }
