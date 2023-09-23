@@ -8,9 +8,9 @@ let heroImages = ['/1.png', '/6.png', '/3.png', '/4.png', '/5.png', '/2.png'];
 export default function Hero() {
   return (
     <section>
-      <div className="custom-screen pt-28 text-gray-600">
+      <div className="custom-screen pt-28 text-gray-600 dark:text-white">
         <div className="space-y-5 max-w-4xl mx-auto text-center">
-          <h1 className="text-4xl text-gray-800 font-extrabold mx-auto sm:text-6xl">
+          <h1 className="text-4xl text-gray-800 font-extrabold dark:text-white mx-auto sm:text-6xl">
             Generate your next AI QR Code in seconds
           </h1>
           <p className="max-w-xl mx-auto">
@@ -27,7 +27,7 @@ export default function Hero() {
             <NavLink
               target="_blank"
               href="https://github.com/Nutlope/qrGPT"
-              className="text-gray-700 border hover:bg-gray-50"
+              className="text-gray-700 border hover:bg-gray-50 dark:text-white dark:hover:bg-gray-600"
               scroll={false}
             >
               Learn more

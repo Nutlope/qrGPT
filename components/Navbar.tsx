@@ -5,9 +5,12 @@ import { useEffect, useState } from 'react';
 import NavLink from './NavLink';
 import Image from 'next/image';
 import { usePathname, useSearchParams } from 'next/navigation';
+import { ModeToggle } from './ThemeToogleButton';
+import { useTheme } from 'next-themes';
 
 const Navbar = () => {
   const [state, setState] = useState(false);
+  const { theme } = useTheme();
 
   const navigation = [
     // { title: 'Testimonials', path: '#testimonials' },
@@ -35,14 +38,18 @@ const Navbar = () => {
   return (
     <header>
       <nav
-        className={`bg-white w-full md:static md:text-sm ${
+        className={` w-full md:static md:text-sm border-b-2 ${
           state ? 'fixed z-10 h-full' : ''
         }`}
       >
         <div className="custom-screen items-center mx-auto md:flex">
           <div className="flex items-center justify-between py-3 md:py-5 md:block">
             <Link href="/" className="flex items-center gap-3">
-              <Image src="/box.svg" alt="logo" width={30} height={30} />
+              {theme === 'dark' ? (
+                <Image src="/box-white.svg" alt="logo" width={30} height={30} />
+              ) : (
+                <Image src="/box.svg" alt="logo" width={30} height={30} />
+              )}
               <div className="font-bold text-lg">QrGPT</div>
             </Link>
             <div className="md:hidden">
@@ -92,7 +99,10 @@ const Navbar = () => {
             <ul className="text-gray-700 justify-end items-center space-y-6 md:flex md:space-x-6 md:space-y-0 md:text-gray-600 md:font-medium">
               {navigation.map((item, idx) => {
                 return (
-                  <li key={idx} className="duration-150 hover:text-gray-900">
+                  <li
+                    key={idx}
+                    className="duration-150  hover:text-gray-900 text-black dark:text-white dark:hover:text-gray-300"
+                  >
                     <Link href={item.path} className="block">
                       {item.title}
                     </Link>
@@ -106,6 +116,9 @@ const Navbar = () => {
                 >
                   Generate your QR Code
                 </NavLink>
+              </li>
+              <li>
+                <ModeToggle />
               </li>
             </ul>
           </div>
