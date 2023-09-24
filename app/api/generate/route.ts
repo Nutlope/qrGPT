@@ -6,6 +6,59 @@ import { kv } from '@vercel/kv';
 import { put } from '@vercel/blob';
 import { nanoid } from '@/utils/utils';
 
+import { createCanvas, loadImage } from 'canvas';
+
+// without color changing
+// async function addTextToImg(imgUrl: string): Promise<string> {
+//   const canvas = createCanvas(400, 400);
+//   const ctx = canvas.getContext('2d');
+
+//   // Load the image
+//   const image = await loadImage(imgUrl);
+//   ctx.drawImage(image, 0, 0, canvas.width, canvas.height);
+
+//   // Add text to the bottom of the image
+//   ctx.font = '20px Arial';
+//   ctx.fillStyle = 'white';
+//   ctx.textAlign = 'center';
+//   ctx.fillText('TEST', canvas.width / 2, canvas.height - 20);
+
+//   return canvas.toDataURL();
+// }
+
+// with color changing
+export const addTextToImg = async (imgUrl: string): Promise<string> => {
+  const canvas = createCanvas(400, 400);
+  const ctx = canvas.getContext('2d');
+
+  // Load the image
+  const image = await loadImage(imgUrl);
+  ctx.drawImage(image, 0, 0, canvas.width, canvas.height);
+
+  // Get image data
+  const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height).data;
+
+  // Calculate the average brightness of the image
+  let totalBrightness = 0;
+  for (let i = 0; i < imageData.length; i += 4) {
+    // 4 channels: Red, Green, Blue, and Alpha
+    const red = imageData[i];
+    const green = imageData[i + 1];
+    const blue = imageData[i + 2];
+    totalBrightness += 0.299 * red + 0.587 * green + 0.114 * blue; // Standard luminance calculation
+  }
+
+  const averageBrightness = totalBrightness / (canvas.width * canvas.height);
+
+  // Choose text color based on average brightness
+  ctx.font = '20px Arial';
+  ctx.fillStyle = averageBrightness < 128 ? 'white' : 'black'; // If the average brightness is less than 128, choose white, else choose black.
+  ctx.textAlign = 'center';
+  ctx.fillText('TEST', canvas.width / 2, canvas.height - 20);
+
+  return canvas.toDataURL();
+};
+
 /**
  * Validates a request object.
  *
@@ -64,8 +117,13 @@ export async function POST(request: NextRequest) {
   const endTime = performance.now();
   const durationMS = endTime - startTime;
 
+  const now = Date.now();
+  const canvasImg = await addTextToImg(imageUrl);
+  console.log('canvas time', Date.now() - now);
+  // console.log('canvasImg', canvasImg);
+
   // convert output to a blob object
-  const file = await fetch(imageUrl).then((res) => res.blob());
+  const file = await fetch(canvasImg).then((res) => res.blob());
 
   // upload & store in Vercel Blob
   const { url } = await put(`${id}.png`, file, { access: 'public' });
