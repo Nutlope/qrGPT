@@ -7,8 +7,8 @@ import { Analytics } from '@vercel/analytics/react';
 
 const inter = Inter({ subsets: ['latin'] });
 
-let title = 'QrGPT - QR Code Generator';
-let description = 'Generate your AI QR Code in seconds';
+let title = 'Wifi QR Code Generator';
+let description = 'Generate your wifi qr code in seconds';
 let url = 'https://www.qrgpt.io';
 let ogimage = 'https://www.qrgpt.io/og-image.png';
 let sitename = 'qrGPT.io';

@@ -1,25 +1,8 @@
-<a href="https://qrGPT.io">
-  <img alt="QrGPT – Generate beautiful AI QR Codes in seconds." src="/public/og-image.png">
-  <h1 align="center">qrGPT</h1>
-</a>
+## No More Wifi Passwords
 
-<p align="center">
-  Generate beautiful AI QR Codes in seconds. Powered by Vercel and Replicate.
-</p>
+This is a fun project to get rid of wifi passwords so we never have to remember them again. I took big inspiration from [qrGpt repo](https://github.com/Nutlope/qrGPT) that had a lot of the basics already set up (this repo is forked from it)
 
-<p align="center">
-  <a href="https://codeium.com?repo_name=nutlope%2Fqrgpt">
-    <img src="https://codeium.com/badges/main" alt="Codium" />
-  </a>
-</p>
-
-<p align="center">
-  <a href="#tech-stack"><strong>Tech Stack</strong></a> ·
-  <a href="#deploy-your-own"><strong>Deploy Your Own</strong></a> ·
-  <a href="#authors"><strong>Authors</strong></a> ·
-  <a href="#credits"><strong>Credits</strong></a>
-</p>
-<br/>
+Generate wifi qr codes so you never have to memorize or pass long strings to your guests ever again
 
 ## Tech Stack
 
@@ -31,10 +14,6 @@
 
 ## Deploy Your Own
 
-You can deploy this template to Vercel with the button below:
-
-[![Deploy with Vercel](https://vercel.com/button)](https://vercel.fyi/qrGPT)
-
 Note that you'll need to:
 
 - Set up [Replicate](https://replicate.com)
@@ -43,11 +22,9 @@ Note that you'll need to:
 
 ## Authors
 
-- Hassan El Mghari ([@nutlope](https://twitter.com/nutlope))
-- Kevin Hou ([@kevinhou22](https://twitter.com/kevinhou22))
+- Andriy Kulak ([@emergingbits](https://twitter.com/emergingbits))
 
 ## Credits
 
-- [Codeium](https://codeium.com?repo_name=nutlope%2Fqrgpt) and [v0](https://v0.dev/) for quick prototyping and AI autocomplete
-- [Spirals](https://spirals.vercel.app/) for great code patterns and some code (ty Steven)
+- original qrGpt authors are: Hassan El Mghari ([@nutlope](https://twitter.com/nutlope)) & Kevin Hou ([@kevinhou22](https://twitter.com/kevinhou22))
 - [Lim Zi Yang](https://github.com/ZYLIM0702) for the original AI model
