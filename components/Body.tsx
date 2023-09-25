@@ -26,6 +26,7 @@ import va from '@vercel/analytics';
 import { PromptSuggestion } from '@/components/PromptSuggestion';
 import { useRouter } from 'next/navigation';
 import { toast, Toaster } from 'react-hot-toast';
+import { generateWifiStr } from '@/utils/utils';
 
 const promptSuggestions = [
   'A city view with clouds',
@@ -35,7 +36,8 @@ const promptSuggestions = [
 ];
 
 const generateFormSchema = z.object({
-  url: z.string().min(1),
+  wifi_name: z.string().min(1),
+  wifi_password: z.string().min(1),
   prompt: z.string().min(3).max(160),
 });
 
@@ -58,6 +60,7 @@ const Body = ({
   const [error, setError] = useState<Error | null>(null);
   const [response, setResponse] = useState<QrGenerateResponse | null>(null);
   const [submittedURL, setSubmittedURL] = useState<string | null>(null);
+  const [isSubmitted, setSubmit] = useState(false);
 
   console.log('props ===>', {
     imageUrl,
@@ -76,7 +79,8 @@ const Body = ({
 
     // Set default values so that the form inputs are controlled components.
     defaultValues: {
-      url: '',
+      wifi_name: '',
+      wifi_password: '',
       prompt: '',
     },
   });
@@ -88,10 +92,12 @@ const Body = ({
         model_latency_ms: modelLatency,
         id: id,
       });
-      setSubmittedURL(redirectUrl);
+      // setSubmittedURL(redirectUrl);
+      setSubmit(true);
 
-      form.setValue('prompt', prompt);
-      form.setValue('url', redirectUrl);
+      // need to set this for the form later
+      // form.setValue('prompt', prompt);
+      //   form.setValue('url', redirectUrl);
     }
   }, [imageUrl, modelLatency, prompt, redirectUrl, id, form]);
 
@@ -106,11 +112,15 @@ const Body = ({
     async (values: GenerateFormValues) => {
       setIsLoading(true);
       setResponse(null);
-      setSubmittedURL(values.url);
+      setSubmit(true);
+      //  setSubmittedURL(values.url);
 
       try {
         const request: QrGenerateRequest = {
-          url: values.url,
+          url: generateWifiStr({
+            wifiName: values.wifi_name,
+            wifiPassword: values.wifi_password,
+          }),
           prompt: values.prompt,
         };
         const response = await fetch('/api/generate', {
@@ -153,16 +163,32 @@ const Body = ({
     <div className="flex justify-center items-center flex-col w-full lg:p-0 p-4 sm:mb-28 mb-0">
       <div className="max-w-6xl w-full grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-12 mt-10">
         <div className="col-span-1">
-          <h1 className="text-3xl font-bold mb-10">Generate a QR Code</h1>
+          <h1 className="text-3xl font-bold mb-10">Generate a Wifi QR Code</h1>
           <Form {...form}>
             <form onSubmit={form.handleSubmit(handleSubmit)}>
               <div className="flex flex-col gap-4">
                 <FormField
                   control={form.control}
-                  name="url"
+                  name="wifi_name"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel>URL</FormLabel>
+                      <FormLabel>Wifi Network Name (SSID)</FormLabel>
+                      <FormControl>
+                        <Input placeholder="roomgpt.io" {...field} />
+                      </FormControl>
+                      <FormDescription>
+                        This is what your QR code will link to.
+                      </FormDescription>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={form.control}
+                  name="wifi_password"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Wifi Password</FormLabel>
                       <FormControl>
                         <Input placeholder="roomgpt.io" {...field} />
                       </FormControl>
@@ -234,7 +260,7 @@ const Body = ({
           </Form>
         </div>
         <div className="col-span-1">
-          {submittedURL && (
+          {isSubmitted && (
             <>
               <h1 className="text-3xl font-bold sm:mb-5 mb-5 mt-5 sm:mt-0 sm:text-center text-left">
                 Your QR Code

@@ -104,6 +104,7 @@ export async function POST(request: NextRequest) {
   const id = nanoid();
   const startTime = performance.now();
 
+  // WFI:S:NETWORK;T:WPA;P:PASSWORD;H:;;
   let imageUrl = await replicateClient.generateQrCode({
     url: reqBody.url,
     prompt: reqBody.prompt,
@@ -111,7 +112,7 @@ export async function POST(request: NextRequest) {
     num_inference_steps: 30,
     guidance_scale: 5,
     negative_prompt:
-      'Longbody, lowres, bad anatomy, bad hands, missing fingers, extra digit, fewer digits, cropped, worst quality, low quality, blurry',
+      'Longbody, lowres, bad anatomy, bad hands, missing fingers, extra digit, fewer digits, cropped, worst quality, low quality, ugly, disfigured, low quality, blurry, nsfw',
   });
 
   const endTime = performance.now();

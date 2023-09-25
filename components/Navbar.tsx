@@ -10,7 +10,7 @@ const Navbar = () => {
   const [state, setState] = useState(false);
 
   const navigation = [
-    // { title: 'Testimonials', path: '#testimonials' },
+    { title: 'Testimonials', path: '/testimonials' },
     { title: 'Homepage', path: '/' },
   ];
 
