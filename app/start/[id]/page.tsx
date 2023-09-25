@@ -7,7 +7,7 @@ async function getAllKv(id: string) {
   const data = await kv.hgetall<{
     prompt: string;
     image?: string;
-    website_url?: string;
+    wifi_name?: string;
     model_latency?: string;
   }>(id);
 
@@ -29,7 +29,7 @@ export async function generateMetadata({
   }
 
   const title = `QrGPT: ${data.prompt}`;
-  const description = `A QR code generated from qrGPT.io linking to: ${data.website_url}`;
+  const description = `A QR code generated from qrGPT.io linking to: ${data.wifi_name}`;
   const image = data.image || 'https://qrGPT.io/og-image.png';
 
   return {
@@ -69,7 +69,7 @@ export default async function Results({
     <Body
       prompt={data.prompt}
       imageUrl={data.image}
-      redirectUrl={data.website_url}
+      renderedWifiName={data.wifi_name}
       modelLatency={Number(data.model_latency)}
       id={params.id}
     />

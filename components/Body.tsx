@@ -26,7 +26,6 @@ import va from '@vercel/analytics';
 import { PromptSuggestion } from '@/components/PromptSuggestion';
 import { useRouter } from 'next/navigation';
 import { toast, Toaster } from 'react-hot-toast';
-import { generateWifiStr } from '@/utils/utils';
 
 const promptSuggestions = [
   'A city view with clouds',
@@ -46,13 +45,13 @@ type GenerateFormValues = z.infer<typeof generateFormSchema>;
 const Body = ({
   imageUrl,
   prompt,
-  redirectUrl,
+  renderedWifiName,
   modelLatency,
   id,
 }: {
   imageUrl?: string;
   prompt?: string;
-  redirectUrl?: string;
+  renderedWifiName?: string;
   modelLatency?: number;
   id?: string;
 }) => {
@@ -65,10 +64,11 @@ const Body = ({
   console.log('props ===>', {
     imageUrl,
     prompt,
-    redirectUrl,
+    renderedWifiName,
     modelLatency,
     id,
     response,
+    isSubmitted,
   });
 
   const router = useRouter();
@@ -86,7 +86,8 @@ const Body = ({
   });
 
   useEffect(() => {
-    if (imageUrl && prompt && redirectUrl && modelLatency && id) {
+    // this gets triggered when we navigate to the /start/[id] page & we need to set isSubmitted to true
+    if (imageUrl && prompt && renderedWifiName && modelLatency && id) {
       setResponse({
         image_url: imageUrl,
         model_latency_ms: modelLatency,
@@ -99,7 +100,7 @@ const Body = ({
       // form.setValue('prompt', prompt);
       //   form.setValue('url', redirectUrl);
     }
-  }, [imageUrl, modelLatency, prompt, redirectUrl, id, form]);
+  }, [imageUrl, modelLatency, prompt, renderedWifiName, id, form]);
 
   const handleSuggestionClick = useCallback(
     (suggestion: string) => {
@@ -117,10 +118,8 @@ const Body = ({
 
       try {
         const request: QrGenerateRequest = {
-          url: generateWifiStr({
-            wifiName: values.wifi_name,
-            wifiPassword: values.wifi_password,
-          }),
+          wifi_name: values.wifi_name,
+          wifi_password: values.wifi_password,
           prompt: values.prompt,
         };
         const response = await fetch('/api/generate', {

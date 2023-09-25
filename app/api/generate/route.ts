@@ -4,7 +4,7 @@ import { NextRequest } from 'next/server';
 // import { Ratelimit } from '@upstash/ratelimit';
 import { kv } from '@vercel/kv';
 import { put } from '@vercel/blob';
-import { nanoid } from '@/utils/utils';
+import { generateWifiStr, nanoid } from '@/utils/utils';
 
 import { createCanvas, loadImage } from 'canvas';
 
@@ -27,7 +27,12 @@ import { createCanvas, loadImage } from 'canvas';
 // }
 
 // with color changing
-export const addTextToImg = async (imgUrl: string): Promise<string> => {
+export const addTextToImg = async (props: {
+  imgUrl: string;
+  wifiName: string;
+  wifiPassword: string;
+}): Promise<string> => {
+  const { imgUrl, wifiName, wifiPassword } = props;
   const canvas = createCanvas(400, 400);
   const ctx = canvas.getContext('2d');
 
@@ -54,7 +59,11 @@ export const addTextToImg = async (imgUrl: string): Promise<string> => {
   ctx.font = '20px Arial';
   ctx.fillStyle = averageBrightness < 128 ? 'white' : 'black'; // If the average brightness is less than 128, choose white, else choose black.
   ctx.textAlign = 'center';
-  ctx.fillText('TEST', canvas.width / 2, canvas.height - 20);
+  ctx.fillText(
+    `u: ${wifiName} p: ${wifiPassword}`,
+    canvas.width / 2,
+    canvas.height - 20,
+  );
 
   return canvas.toDataURL();
 };
@@ -67,8 +76,11 @@ export const addTextToImg = async (imgUrl: string): Promise<string> => {
  */
 
 const validateRequest = (request: QrGenerateRequest) => {
-  if (!request.url) {
-    throw new Error('URL is required');
+  if (!request.wifi_name) {
+    throw new Error('wifi name is required');
+  }
+  if (!request.wifi_password) {
+    throw new Error('wifi password is required');
   }
   if (!request.prompt) {
     throw new Error('Prompt is required');
@@ -106,7 +118,10 @@ export async function POST(request: NextRequest) {
 
   // WFI:S:NETWORK;T:WPA;P:PASSWORD;H:;;
   let imageUrl = await replicateClient.generateQrCode({
-    url: reqBody.url,
+    url: generateWifiStr({
+      wifi_name: reqBody.wifi_name,
+      wifi_password: reqBody.wifi_password,
+    }),
     prompt: reqBody.prompt,
     qr_conditioning_scale: 2,
     num_inference_steps: 30,
@@ -119,7 +134,11 @@ export async function POST(request: NextRequest) {
   const durationMS = endTime - startTime;
 
   const now = Date.now();
-  const canvasImg = await addTextToImg(imageUrl);
+  const canvasImg = await addTextToImg({
+    imgUrl: imageUrl,
+    wifiName: reqBody.wifi_name,
+    wifiPassword: reqBody.wifi_password,
+  });
   console.log('canvas time', Date.now() - now);
   // console.log('canvasImg', canvasImg);
 
@@ -132,7 +151,8 @@ export async function POST(request: NextRequest) {
   await kv.hset(id, {
     prompt: reqBody.prompt,
     image: url,
-    website_url: reqBody.url,
+    wifi_name: reqBody.wifi_name,
+    wifi_password: reqBody.wifi_password,
     model_latency: Math.round(durationMS),
   });
 
