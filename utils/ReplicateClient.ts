@@ -26,6 +26,8 @@ export class ReplicateClient {
           url: request.url,
           prompt: request.prompt,
           qr_conditioning_scale: request.qr_conditioning_scale,
+          scheduler: request.scheduler,
+          image_resolution: request.image_resolution,
           num_inference_steps: request.num_inference_steps,
           guidance_scale: request.guidance_scale,
           negative_prompt: request.negative_prompt,

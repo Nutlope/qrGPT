@@ -8,24 +8,6 @@ import { generateWifiStr, nanoid } from '@/utils/utils';
 
 import { createCanvas, loadImage } from 'canvas';
 
-// without color changing
-// async function addTextToImg(imgUrl: string): Promise<string> {
-//   const canvas = createCanvas(400, 400);
-//   const ctx = canvas.getContext('2d');
-
-//   // Load the image
-//   const image = await loadImage(imgUrl);
-//   ctx.drawImage(image, 0, 0, canvas.width, canvas.height);
-
-//   // Add text to the bottom of the image
-//   ctx.font = '20px Arial';
-//   ctx.fillStyle = 'white';
-//   ctx.textAlign = 'center';
-//   ctx.fillText('TEST', canvas.width / 2, canvas.height - 20);
-
-//   return canvas.toDataURL();
-// }
-
 // with color changing
 export const addTextToImg = async (props: {
   imgUrl: string;
@@ -33,7 +15,7 @@ export const addTextToImg = async (props: {
   wifiPassword: string;
 }): Promise<string> => {
   const { imgUrl, wifiName, wifiPassword } = props;
-  const canvas = createCanvas(400, 400);
+  const canvas = createCanvas(512, 512);
   const ctx = canvas.getContext('2d');
 
   // Load the image
@@ -116,15 +98,21 @@ export async function POST(request: NextRequest) {
   const id = nanoid();
   const startTime = performance.now();
 
+  // has equal chance of being true or false
+  // const randomBool = Math.random() < 0.5 ? true : false;
+
   // WFI:S:NETWORK;T:WPA;P:PASSWORD;H:;;
   let imageUrl = await replicateClient.generateQrCode({
     url: generateWifiStr({
       wifi_name: reqBody.wifi_name,
       wifi_password: reqBody.wifi_password,
     }),
+    scheduler: 'HeunDiscrete',
+    // scheduler: randomBool === true ? 'HeunDiscrete' : 'PNDM',
     prompt: reqBody.prompt,
     qr_conditioning_scale: 2,
-    num_inference_steps: 30,
+    image_resolution: 512,
+    num_inference_steps: 20,
     guidance_scale: 5,
     negative_prompt:
       'Longbody, lowres, bad anatomy, bad hands, missing fingers, extra digit, fewer digits, cropped, worst quality, low quality, ugly, disfigured, low quality, blurry, nsfw',
