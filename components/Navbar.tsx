@@ -9,10 +9,7 @@ import { usePathname, useSearchParams } from 'next/navigation';
 const Navbar = () => {
   const [state, setState] = useState(false);
 
-  const navigation = [
-    { title: 'Testimonials', path: '/testimonials' },
-    { title: 'Homepage', path: '/' },
-  ];
+  const navigation = [{ title: 'Homepage', path: '/' }];
 
   const pathname = usePathname();
   const searchParams = useSearchParams();
