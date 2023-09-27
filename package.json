@@ -7,6 +7,7 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
+    "vercel-build": "yum install gcc-c++ cairo-devel pango-devel libjpeg-turbo-devel giflib-devel",
     "format": "prettier --write ."
   },
   "dependencies": {
@@ -25,9 +26,10 @@
     "@vercel/blob": "^0.12.4",
     "@vercel/kv": "^0.2.2",
     "autoprefixer": "10.4.15",
-    "canvas": "^2.11.2",
+    "canvas": "^2.8.0",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.0.0",
+    "jsdom": "^19.0.0",
     "lucide-react": "^0.279.0",
     "nanoid": "^5.0.1",
     "next": "^13.5.2",
