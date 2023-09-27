@@ -8,10 +8,18 @@ import { usePathname, useSearchParams } from 'next/navigation';
 
 const Navbar = () => {
   const [state, setState] = useState(false);
-
-  const navigation = [{ title: 'Homepage', path: '/' }];
-
   const pathname = usePathname();
+
+  console.log('pathname', pathname);
+
+  const navigation =
+    pathname === '/'
+      ? [{ title: 'FAQs', path: '#faqs' }]
+      : [
+          { title: 'Homepage', path: '/' },
+          { title: 'FAQs', path: '#faqs' },
+        ];
+
   const searchParams = useSearchParams();
 
   useEffect(() => {
@@ -39,7 +47,7 @@ const Navbar = () => {
         <div className="custom-screen items-center mx-auto md:flex">
           <div className="flex items-center justify-between py-3 md:py-5 md:block">
             <Link href="/" className="flex items-center gap-3">
-              <Image src="/box.svg" alt="logo" width={30} height={30} />
+              <Image src="/npLogo.png" alt="logo" width={30} height={30} />
               <div className="font-bold text-lg">NoPasswords.xyz</div>
             </Link>
             <div className="md:hidden">
@@ -89,7 +97,7 @@ const Navbar = () => {
             <ul className="text-gray-700 justify-end items-center space-y-6 md:flex md:space-x-6 md:space-y-0 md:text-gray-600 md:font-medium">
               {navigation.map((item, idx) => {
                 return (
-                  <li key={idx} className="duration-150 hover:text-gray-900">
+                  <li key={idx} className="hover:text-gray-900">
                     <Link href={item.path} className="block">
                       {item.title}
                     </Link>
@@ -98,7 +106,7 @@ const Navbar = () => {
               })}
               <li>
                 <NavLink
-                  href="/start"
+                  href="#gen-qr"
                   className="block font-medium text-sm text-white bg-gray-800 hover:bg-gray-600 active:bg-gray-900 md:inline"
                 >
                   Generate your QR Code

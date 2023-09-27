@@ -22,7 +22,7 @@ Note that you'll need to:
 
 ## Authors
 
-- Andriy Kulak ([@emergingbits](https://twitter.com/emergingbits))
+- Andriy ([@emergingbits](https://twitter.com/emergingbits))
 
 ## Credits
 

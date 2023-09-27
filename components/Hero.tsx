@@ -5,36 +5,40 @@ import NavLink from './NavLink';
 import { ScrollArea, ScrollBar } from './ui/scroll-area';
 import { cn } from '@/utils/utils';
 import Body from './Body';
+import { FAQ } from './FAQ';
 
 let heroImages = [
+  '/8.png',
   '/1.png',
+  '/4.png',
   '/2.png',
   '/3.png',
-  '/4.png',
-  '/1.png',
-  '/2.png',
-  '/3.png',
-  '/4.png',
+  '/5.png',
+  '/6.png',
+  '/7.png',
 ];
 
 export default function Hero() {
   return (
     <section>
-      <div className="custom-screen pt-28 text-gray-600">
+      <div className="custom-screen pt-28">
         <div className="space-y-5 max-w-6xl mx-auto text-center">
           <h1 className="text-4xl text-gray-800 font-extrabold mx-auto sm:text-6xl">
             No More Wifi Passwords
           </h1>
           <h1 className="text-l text-gray-800 font-extrabold mx-auto sm:text-3xl">
-            Create QR Code in a few seconds
+            1) create wifi qr code (with cool art)
           </h1>
-          <h2 className="text-l text-gray-800 font-extrabold mx-auto sm:text-3xl">
-            & Get Rid of Passwords forever
-          </h2>
-          <p className="max-w-xl mx-auto">Yoyo</p>
+          <h1 className="text-l text-gray-800 font-extrabold mx-auto sm:text-3xl">
+            2) print it
+          </h1>
+          <h1 className="text-l text-gray-800 font-extrabold mx-auto sm:text-3xl">
+            3) forget about your password
+          </h1>
+
           <div className="flex items-center justify-center gap-x-3 font-medium text-sm">
             <NavLink
-              href="/start"
+              href="#gen-qr"
               className="text-white bg-gray-800 hover:bg-gray-600 active:bg-gray-900 "
             >
               Generate your Wifi QR Code
@@ -59,8 +63,9 @@ export default function Hero() {
             <ScrollBar orientation="horizontal" />
           </ScrollArea>
         </div>
+        <Body />
+        <FAQ />
       </div>
-      <Body />
     </section>
   );
 }

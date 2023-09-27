@@ -7,7 +7,7 @@ const Footer = () => (
           href="https://twitter.com/emergingbits"
           className="hover:underline transition"
         >
-          Andriy Kulak
+          Andriy
         </a>{' '}
       </p>
     </div>

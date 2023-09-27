@@ -4,7 +4,8 @@ const NavLink = ({ children, href, ...props }: any) => (
   <Link
     href={href}
     {...props}
-    className={`py-2.5 px-4 text-center rounded-lg duration-150 ${
+    // scroll
+    className={`nav-link py-2.5 px-4 text-center rounded-lg duration-150 ${
       props?.className || ''
     }`}
   >

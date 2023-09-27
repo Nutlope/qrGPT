@@ -72,18 +72,8 @@ const Body = ({
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<Error | null>(null);
   const [response, setResponse] = useState<QrGenerateResponse | null>(null);
-  const [submittedURL, setSubmittedURL] = useState<string | null>(null);
+  // const [submittedURL, setSubmittedURL] = useState<string | null>(null);
   const [isSubmitted, setSubmit] = useState(false);
-
-  console.log('props ===>', {
-    imageUrl,
-    prompt,
-    renderedWifiName,
-    modelLatency,
-    id,
-    response,
-    isSubmitted,
-  });
 
   const router = useRouter();
 
@@ -128,7 +118,6 @@ const Body = ({
       setIsLoading(true);
       setResponse(null);
       setSubmit(true);
-      //  setSubmittedURL(values.url);
 
       try {
         const request: QrGenerateRequest = {
@@ -173,7 +162,10 @@ const Body = ({
   );
 
   return (
-    <div className="flex justify-center items-center flex-col w-full lg:p-0 p-4 sm:mb-28 mb-0">
+    <div
+      id="gen-qr"
+      className="flex justify-center items-center flex-col w-full lg:p-0 p-4 sm:mb-28 mb-0"
+    >
       <div className="max-w-6xl w-full grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-12 mt-10">
         <div className="col-span-1">
           <h1 className="text-3xl font-bold mb-10">Generate a Wifi QR Code</h1>
@@ -230,7 +222,7 @@ const Body = ({
                 />
                 <div className="my-2">
                   <p className="text-sm font-medium mb-3">Prompt suggestions</p>
-                  <div className="grid sm:grid-cols-2 grid-cols-1 gap-3 text-center text-gray-500 text-sm">
+                  <div className="grid sm:grid-cols-2 grid-cols-1 gap-3 text-center text-sm">
                     {promptSuggestions.map((suggestion) => (
                       <PromptSuggestion
                         key={suggestion}
@@ -271,7 +263,7 @@ const Body = ({
           {isSubmitted && (
             <>
               <h1 className="text-3xl font-bold sm:mb-5 mb-5 mt-5 sm:mt-0 sm:text-center text-left">
-                Your QR Code
+                Your Wifi QR Code
               </h1>
               <div>
                 <div className="flex flex-col justify-center relative h-auto items-center">

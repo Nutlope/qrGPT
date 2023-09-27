@@ -6,6 +6,11 @@
   @apply max-w-screen-xl mx-auto px-4 md:px-8;
 }
 
+html {
+  /* for nav links */
+  scroll-behavior: smooth;
+}
+
 .gradient-border {
   border: 1px solid transparent;
   background: linear-gradient(white, white),
