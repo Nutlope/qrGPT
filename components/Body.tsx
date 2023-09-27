@@ -34,6 +34,20 @@ const promptSuggestions = [
   'A saharan desert',
 ];
 
+const suggestions = [
+  'alient planet with rectangles',
+  'italian mountains in a James Bond movie',
+  'industrial age with plants',
+  'rivers and streams in Peruvian forest with grass',
+  'waterfall in Bali with palm trees and ocean',
+  'minimalist futuristic architecture',
+  'futuristic robot creatures',
+  'painting of the mars, colorful planets and shooting stars',
+  'shooting stars in the milkyway, trippy sky, spinning round and round',
+  'a ship with neon lights going through a storm in the black sea',
+  'spiritual wicked geometry patterns',
+];
+
 const generateFormSchema = z.object({
   wifi_name: z.string().min(1),
   wifi_password: z.string().min(1),
@@ -97,8 +111,8 @@ const Body = ({
       setSubmit(true);
 
       // need to set this for the form later
-      // form.setValue('prompt', prompt);
-      //   form.setValue('url', redirectUrl);
+      form.setValue('prompt', prompt);
+      form.setValue('wifi_name', renderedWifiName);
     }
   }, [imageUrl, modelLatency, prompt, renderedWifiName, id, form]);
 
@@ -143,7 +157,7 @@ const Body = ({
           prompt: values.prompt,
         });
 
-        router.push(`/start/${data.id}`);
+        router.push(`/results/${data.id}`);
       } catch (error) {
         va.track('Failed to generate', {
           prompt: values.prompt,
@@ -173,11 +187,8 @@ const Body = ({
                     <FormItem>
                       <FormLabel>Wifi Network Name (SSID)</FormLabel>
                       <FormControl>
-                        <Input placeholder="roomgpt.io" {...field} />
+                        <Input placeholder="infinity_5g" {...field} />
                       </FormControl>
-                      <FormDescription>
-                        This is what your QR code will link to.
-                      </FormDescription>
                       <FormMessage />
                     </FormItem>
                   )}
@@ -189,11 +200,9 @@ const Body = ({
                     <FormItem>
                       <FormLabel>Wifi Password</FormLabel>
                       <FormControl>
-                        <Input placeholder="roomgpt.io" {...field} />
+                        <Input placeholder="..." {...field} />
                       </FormControl>
-                      <FormDescription>
-                        This is what your QR code will link to.
-                      </FormDescription>
+
                       <FormMessage />
                     </FormItem>
                   )}
@@ -205,7 +214,7 @@ const Body = ({
                     <FormItem>
                       <FormLabel>Prompt</FormLabel>
                       <FormControl>
-                        <Textarea
+                        <Input
                           placeholder="A city view with clouds"
                           className="resize-none"
                           {...field}

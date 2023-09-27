@@ -4,6 +4,7 @@ import Image from 'next/image';
 import NavLink from './NavLink';
 import { ScrollArea, ScrollBar } from './ui/scroll-area';
 import { cn } from '@/utils/utils';
+import Body from './Body';
 
 let heroImages = [
   '/1.png',
@@ -59,6 +60,7 @@ export default function Hero() {
           </ScrollArea>
         </div>
       </div>
+      <Body />
     </section>
   );
 }

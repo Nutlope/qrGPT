@@ -38,7 +38,7 @@ export const addTextToImg = async (props: {
   const averageBrightness = totalBrightness / (canvas.width * canvas.height);
 
   // Choose text color based on average brightness
-  ctx.font = '20px Arial';
+  ctx.font = 'bold 25px Arial';
   ctx.fillStyle = averageBrightness < 128 ? 'white' : 'black'; // If the average brightness is less than 128, choose white, else choose black.
   ctx.textAlign = 'center';
   ctx.fillText(
@@ -95,7 +95,9 @@ export async function POST(request: NextRequest) {
     }
   }
 
-  const id = nanoid();
+  // adding a few more digits here to make it really hard to guess
+  const id = nanoid(12);
+
   const startTime = performance.now();
 
   // has equal chance of being true or false
@@ -111,9 +113,9 @@ export async function POST(request: NextRequest) {
     // scheduler: randomBool === true ? 'HeunDiscrete' : 'PNDM',
     prompt: reqBody.prompt,
     qr_conditioning_scale: 2,
-    image_resolution: 512,
-    num_inference_steps: 20,
-    guidance_scale: 5,
+    image_resolution: 768,
+    num_inference_steps: 30,
+    guidance_scale: 9,
     negative_prompt:
       'Longbody, lowres, bad anatomy, bad hands, missing fingers, extra digit, fewer digits, cropped, worst quality, low quality, ugly, disfigured, low quality, blurry, nsfw',
   });
