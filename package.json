@@ -31,7 +31,7 @@
     "clsx": "^2.0.0",
     "jsdom": "^19.0.0",
     "lucide-react": "^0.279.0",
-    "nanoid": "^5.0.1",
+    "nanoid": "^4.0.2",
     "next": "^13.5.2",
     "postcss": "8.4.29",
     "prettier": "^3.0.3",
