@@ -12,6 +12,13 @@ import {
   FormLabel,
   FormMessage,
 } from '@/components/ui/form';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
 import { Textarea } from '@/components/ui/textarea';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
@@ -23,16 +30,8 @@ import { Alert, AlertTitle, AlertDescription } from '@/components/ui/alert';
 import LoadingDots from '@/components/ui/loadingdots';
 import downloadQrCode from '@/utils/downloadQrCode';
 import va from '@vercel/analytics';
-import { PromptSuggestion } from '@/components/PromptSuggestion';
 import { useRouter } from 'next/navigation';
 import { toast, Toaster } from 'react-hot-toast';
-
-const promptSuggestions = [
-  'A city view with clouds',
-  'A beautiful glacier',
-  'A forest overlooking a mountain',
-  'A saharan desert',
-];
 
 const suggestions = [
   'alient planet with rectangles',
@@ -206,7 +205,7 @@ const Body = ({
                     <FormItem>
                       <FormLabel>Prompt</FormLabel>
                       <FormControl>
-                        <Input
+                        <Textarea
                           placeholder="A city view with clouds"
                           className="resize-none"
                           {...field}
@@ -223,14 +222,21 @@ const Body = ({
                 <div className="my-2">
                   <p className="text-sm font-medium mb-3">Prompt suggestions</p>
                   <div className="grid sm:grid-cols-2 grid-cols-1 gap-3 text-center text-sm">
-                    {promptSuggestions.map((suggestion) => (
-                      <PromptSuggestion
-                        key={suggestion}
-                        suggestion={suggestion}
-                        onClick={() => handleSuggestionClick(suggestion)}
-                        isLoading={isLoading}
-                      />
-                    ))}
+                    <Select
+                      onValueChange={(x) => handleSuggestionClick(x)}
+                      disabled={isLoading}
+                    >
+                      <SelectTrigger className="w-max">
+                        <SelectValue placeholder="select from options" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {suggestions.map((suggestion) => (
+                          <SelectItem value={suggestion} key={suggestion}>
+                            {suggestion}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
                   </div>
                 </div>
                 <Button

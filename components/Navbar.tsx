@@ -12,13 +12,10 @@ const Navbar = () => {
 
   console.log('pathname', pathname);
 
-  const navigation =
-    pathname === '/'
-      ? [{ title: 'FAQs', path: '#faqs' }]
-      : [
-          { title: 'Homepage', path: '/' },
-          { title: 'FAQs', path: '#faqs' },
-        ];
+  const isHome = pathname === '/';
+  const navigation = isHome
+    ? [{ title: 'FAQs', path: '#faqs' }]
+    : [{ title: 'Homepage', path: '/' }];
 
   const searchParams = useSearchParams();
 
@@ -104,14 +101,16 @@ const Navbar = () => {
                   </li>
                 );
               })}
-              <li>
-                <NavLink
-                  href="#gen-qr"
-                  className="block font-medium text-sm text-white bg-gray-800 hover:bg-gray-600 active:bg-gray-900 md:inline"
-                >
-                  Generate your QR Code
-                </NavLink>
-              </li>
+              {isHome && (
+                <li>
+                  <NavLink
+                    href="#gen-qr"
+                    className="block font-medium text-sm text-white bg-gray-800 hover:bg-gray-600 active:bg-gray-900 md:inline"
+                  >
+                    Generate your QR Code
+                  </NavLink>
+                </li>
+              )}
             </ul>
           </div>
         </div>

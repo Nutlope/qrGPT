@@ -5,50 +5,7 @@ import { NextRequest } from 'next/server';
 import { kv } from '@vercel/kv';
 import { put } from '@vercel/blob';
 import { generateWifiStr, nanoid } from '@/utils/utils';
-
 import { createCanvas, loadImage } from 'canvas';
-
-// with color changing
-export const addTextToImg = async (props: {
-  imgUrl: string;
-  wifiName: string;
-  wifiPassword: string;
-}): Promise<string> => {
-  const { imgUrl, wifiName, wifiPassword } = props;
-  const canvas = createCanvas(512, 512);
-  const ctx = canvas.getContext('2d');
-
-  // Load the image
-  const image = await loadImage(imgUrl);
-  ctx.drawImage(image, 0, 0, canvas.width, canvas.height);
-
-  // Get image data
-  const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height).data;
-
-  // Calculate the average brightness of the image
-  let totalBrightness = 0;
-  for (let i = 0; i < imageData.length; i += 4) {
-    // 4 channels: Red, Green, Blue, and Alpha
-    const red = imageData[i];
-    const green = imageData[i + 1];
-    const blue = imageData[i + 2];
-    totalBrightness += 0.299 * red + 0.587 * green + 0.114 * blue; // Standard luminance calculation
-  }
-
-  const averageBrightness = totalBrightness / (canvas.width * canvas.height);
-
-  // Choose text color based on average brightness
-  ctx.font = 'bold 25px Arial';
-  ctx.fillStyle = averageBrightness < 128 ? 'white' : 'black'; // If the average brightness is less than 128, choose white, else choose black.
-  ctx.textAlign = 'center';
-  ctx.fillText(
-    `u: ${wifiName} p: ${wifiPassword}`,
-    canvas.width / 2,
-    canvas.height - 20,
-  );
-
-  return canvas.toDataURL();
-};
 
 /**
  * Validates a request object.
@@ -56,18 +13,6 @@ export const addTextToImg = async (props: {
  * @param {QrGenerateRequest} request - The request object to be validated.
  * @throws {Error} Error message if URL or prompt is missing.
  */
-
-const validateRequest = (request: QrGenerateRequest) => {
-  if (!request.wifi_name) {
-    throw new Error('wifi name is required');
-  }
-  if (!request.wifi_password) {
-    throw new Error('wifi password is required');
-  }
-  if (!request.prompt) {
-    throw new Error('Prompt is required');
-  }
-};
 
 // const ratelimit = new Ratelimit({
 //   redis: kv,
@@ -86,6 +31,60 @@ export async function POST(request: NextRequest) {
   //     status: 429,
   //   });
   // }
+
+  // with color changing
+  const addTextToImg = async (props: {
+    imgUrl: string;
+    wifiName: string;
+    wifiPassword: string;
+  }): Promise<string> => {
+    const { imgUrl, wifiName, wifiPassword } = props;
+    const canvas = createCanvas(512, 512);
+    const ctx = canvas.getContext('2d');
+
+    // Load the image
+    const image = await loadImage(imgUrl);
+    ctx.drawImage(image, 0, 0, canvas.width, canvas.height);
+
+    // Get image data
+    const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height).data;
+
+    // Calculate the average brightness of the image
+    let totalBrightness = 0;
+    for (let i = 0; i < imageData.length; i += 4) {
+      // 4 channels: Red, Green, Blue, and Alpha
+      const red = imageData[i];
+      const green = imageData[i + 1];
+      const blue = imageData[i + 2];
+      totalBrightness += 0.299 * red + 0.587 * green + 0.114 * blue; // Standard luminance calculation
+    }
+
+    const averageBrightness = totalBrightness / (canvas.width * canvas.height);
+
+    // Choose text color based on average brightness
+    ctx.font = 'bold 25px Arial';
+    ctx.fillStyle = averageBrightness < 128 ? 'white' : 'black'; // If the average brightness is less than 128, choose white, else choose black.
+    ctx.textAlign = 'center';
+    ctx.fillText(
+      `u: ${wifiName} p: ${wifiPassword}`,
+      canvas.width / 2,
+      canvas.height - 20,
+    );
+
+    return canvas.toDataURL();
+  };
+
+  const validateRequest = (request: QrGenerateRequest) => {
+    if (!request.wifi_name) {
+      throw new Error('wifi name is required');
+    }
+    if (!request.wifi_password) {
+      throw new Error('wifi password is required');
+    }
+    if (!request.prompt) {
+      throw new Error('Prompt is required');
+    }
+  };
 
   try {
     validateRequest(reqBody);
