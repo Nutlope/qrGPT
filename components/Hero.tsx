@@ -39,7 +39,7 @@ export default function Hero() {
           <div className="flex items-center justify-center gap-x-3 font-medium text-sm">
             <NavLink
               href="#gen-qr"
-              className="text-white bg-gray-800 hover:bg-gray-600 active:bg-gray-900 "
+              className="text-white bg-blue-700 hover:bg-blue-500 active:bg-blue-700 "
             >
               Generate your Wifi QR Code
             </NavLink>

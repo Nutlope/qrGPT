@@ -8,6 +8,7 @@ export interface QrGenerateRequest {
 
 export interface QrGenerateResponse {
   image_url: string;
+  download_url: string;
   model_latency_ms: number;
 
   /**

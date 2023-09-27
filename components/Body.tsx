@@ -31,7 +31,7 @@ import LoadingDots from '@/components/ui/loadingdots';
 import downloadQrCode from '@/utils/downloadQrCode';
 import va from '@vercel/analytics';
 import { useRouter } from 'next/navigation';
-import { toast, Toaster } from 'react-hot-toast';
+import { Toaster } from 'react-hot-toast';
 
 const suggestions = [
   'alient planet with rectangles',
@@ -57,12 +57,14 @@ type GenerateFormValues = z.infer<typeof generateFormSchema>;
 
 const Body = ({
   imageUrl,
+  downloadUrl,
   prompt,
   renderedWifiName,
   modelLatency,
   id,
 }: {
   imageUrl?: string;
+  downloadUrl?: string;
   prompt?: string;
   renderedWifiName?: string;
   modelLatency?: number;
@@ -90,9 +92,17 @@ const Body = ({
 
   useEffect(() => {
     // this gets triggered when we navigate to the /start/[id] page & we need to set isSubmitted to true
-    if (imageUrl && prompt && renderedWifiName && modelLatency && id) {
+    if (
+      imageUrl &&
+      prompt &&
+      downloadUrl &&
+      renderedWifiName &&
+      modelLatency &&
+      id
+    ) {
       setResponse({
         image_url: imageUrl,
+        download_url: downloadUrl,
         model_latency_ms: modelLatency,
         id: id,
       });
@@ -286,21 +296,18 @@ const Body = ({
                   <div className="flex justify-center gap-5 mt-4">
                     <Button
                       onClick={() =>
-                        downloadQrCode(response.image_url, 'qrCode')
+                        downloadQrCode(response.download_url, 'wifiQrCode')
                       }
                     >
-                      Download
+                      Download With Password
                     </Button>
                     <Button
                       variant="outline"
-                      onClick={() => {
-                        navigator.clipboard.writeText(
-                          `https://qrgpt.io/start/${id || ''}`,
-                        );
-                        toast.success('Link copied to clipboard');
-                      }}
+                      onClick={() =>
+                        downloadQrCode(response.image_url, 'wifiQrCode')
+                      }
                     >
-                      ✂️ Share
+                      Download Without Password
                     </Button>
                   </div>
                 )}

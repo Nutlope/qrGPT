@@ -37,7 +37,12 @@ export async function POST(request: NextRequest) {
     imgUrl: string;
     wifiName: string;
     wifiPassword: string;
-  }): Promise<string> => {
+    multiRender: boolean;
+  }): Promise<string[]> => {
+    function obfuscate(input: string): string {
+      return input.replace(/./g, '*');
+    }
+
     const { imgUrl, wifiName, wifiPassword } = props;
     const canvas = createCanvas(512, 512);
     const ctx = canvas.getContext('2d');
@@ -71,7 +76,27 @@ export async function POST(request: NextRequest) {
       canvas.height - 20,
     );
 
-    return canvas.toDataURL();
+    if (props.multiRender) {
+      // create a 2nd canvas
+      const canvas2 = createCanvas(512, 512);
+      const ctx2 = canvas2.getContext('2d');
+
+      // Load the image
+      const image2 = await loadImage(imgUrl);
+      ctx2.drawImage(image2, 0, 0, canvas.width, canvas.height);
+      // Choose text color based on average brightness
+      ctx2.font = 'bold 25px Arial';
+      ctx2.fillStyle = averageBrightness < 128 ? 'white' : 'black'; // If the average brightness is less than 128, choose white, else choose black.
+      ctx2.textAlign = 'center';
+      ctx2.fillText(
+        `u: ${wifiName} p: ${obfuscate(wifiPassword)}`,
+        canvas.width / 2,
+        canvas.height - 20,
+      );
+      return [canvas.toDataURL(), canvas2.toDataURL()];
+    }
+
+    return [canvas.toDataURL()];
   };
 
   const validateRequest = (request: QrGenerateRequest) => {
@@ -123,30 +148,47 @@ export async function POST(request: NextRequest) {
   const durationMS = endTime - startTime;
 
   const now = Date.now();
-  const canvasImg = await addTextToImg({
+  // we are rendeing one image with password and one with obfuscared
+  const [canvasImg, canvasImg2] = await addTextToImg({
     imgUrl: imageUrl,
     wifiName: reqBody.wifi_name,
     wifiPassword: reqBody.wifi_password,
+    multiRender: true,
   });
   console.log('canvas time', Date.now() - now);
-  // console.log('canvasImg', canvasImg);
 
-  // convert output to a blob object
-  const file = await fetch(canvasImg).then((res) => res.blob());
+  // // convert output to a blob object
+  // const passwordFile = await fetch(canvasImg).then((res) => res.blob());
+  // // convert output to a blob object
+  // const woPasswordFile = await fetch(imageUrl).then((res) => res.blob());
+
+  const [passwordFile, woPasswordFile] = await Promise.all([
+    fetch(canvasImg).then((res) => res.blob()),
+    fetch(canvasImg2).then((res) => res.blob()),
+  ]);
 
   // upload & store in Vercel Blob
-  const { url } = await put(`${id}.png`, file, { access: 'public' });
+  const [withPassword, woPassword] = await Promise.all([
+    put(`${id}.png`, passwordFile, {
+      access: 'public',
+    }),
+    put(`${id}.png`, woPasswordFile, {
+      access: 'public',
+    }),
+  ]);
 
   await kv.hset(id, {
     prompt: reqBody.prompt,
-    image: url,
+    passwordImg: withPassword.url,
+    displayImg: woPassword.url,
     wifi_name: reqBody.wifi_name,
     wifi_password: reqBody.wifi_password,
     model_latency: Math.round(durationMS),
   });
 
   const response: QrGenerateResponse = {
-    image_url: url,
+    image_url: woPassword.url,
+    download_url: withPassword.url,
     model_latency_ms: Math.round(durationMS),
     id: id,
   };
