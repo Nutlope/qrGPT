@@ -10,8 +10,6 @@ const Navbar = () => {
   const [state, setState] = useState(false);
   const pathname = usePathname();
 
-  console.log('pathname', pathname);
-
   const isHome = pathname === '/';
   const navigation = isHome
     ? [{ title: 'FAQs', path: '#faqs' }]

@@ -4,6 +4,7 @@ export interface QrGenerateRequest {
   prompt: string;
   qr_conditioning_scale?: number;
   num_inference_steps?: number;
+  encryption: string;
 }
 
 export interface QrGenerateResponse {

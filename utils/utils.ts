@@ -14,9 +14,12 @@ export const nanoid = customAlphabet(
 export const generateWifiStr = ({
   wifi_name,
   wifi_password,
+  encrpytion,
 }: {
   wifi_name: string;
   wifi_password: string;
+  encrpytion: string;
 }) => {
-  return `WIFI:T:WPA;S:${wifi_name};P:${wifi_password};H:;;`;
+  const encyptValue = encrpytion === 'none' ? '' : encrpytion;
+  return `WIFI:T:${encyptValue};S:${wifi_name};P:${wifi_password};H:;;`;
 };

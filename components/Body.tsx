@@ -37,6 +37,7 @@ const suggestions = [
   'alient planet with rectangles',
   'italian mountains in a James Bond movie',
   'industrial age with plants',
+  'spiritual wicked geometry patterns, colorful',
   'rivers and streams in Peruvian forest with grass',
   'waterfall in Bali with palm trees and ocean',
   'minimalist futuristic architecture',
@@ -44,13 +45,19 @@ const suggestions = [
   'painting of the mars, colorful planets and shooting stars',
   'shooting stars in the milkyway, trippy sky, spinning round and round',
   'a ship with neon lights going through a storm in the black sea',
-  'spiritual wicked geometry patterns',
+];
+
+const encryptOptions = [
+  { value: 'WPA', label: 'WPA' },
+  { value: 'WEP', label: 'WEP' },
+  { value: 'none', label: 'None' },
 ];
 
 const generateFormSchema = z.object({
   wifi_name: z.string().min(1),
   wifi_password: z.string().min(1),
   prompt: z.string().min(3).max(160),
+  encryption: z.string(),
 });
 
 type GenerateFormValues = z.infer<typeof generateFormSchema>;
@@ -87,6 +94,7 @@ const Body = ({
       wifi_name: '',
       wifi_password: '',
       prompt: '',
+      encryption: encryptOptions[0].value,
     },
   });
 
@@ -106,14 +114,13 @@ const Body = ({
         model_latency_ms: modelLatency,
         id: id,
       });
-      // setSubmittedURL(redirectUrl);
       setSubmit(true);
 
       // need to set this for the form later
       form.setValue('prompt', prompt);
       form.setValue('wifi_name', renderedWifiName);
     }
-  }, [imageUrl, modelLatency, prompt, renderedWifiName, id, form]);
+  }, [imageUrl, modelLatency, prompt, renderedWifiName, id, form, downloadUrl]);
 
   const handleSuggestionClick = useCallback(
     (suggestion: string) => {
@@ -133,6 +140,7 @@ const Body = ({
           wifi_name: values.wifi_name,
           wifi_password: values.wifi_password,
           prompt: values.prompt,
+          encryption: values.encryption,
         };
         const response = await fetch('/api/generate', {
           method: 'POST',
@@ -148,8 +156,6 @@ const Body = ({
         }
 
         const data = await response.json();
-
-        console.log('data ===>  ', data);
 
         va.track('Generated QR Code', {
           prompt: values.prompt,
@@ -210,6 +216,37 @@ const Body = ({
                 />
                 <FormField
                   control={form.control}
+                  name="encryption"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>
+                        Encyption <i>(Default WPA should work for most)</i>
+                      </FormLabel>
+                      <Select
+                        onValueChange={field.onChange}
+                        defaultValue={field.value}
+                      >
+                        <FormControl>
+                          <SelectTrigger>
+                            <SelectValue
+                              defaultValue={encryptOptions[0].value}
+                              placeholder={encryptOptions[0].label}
+                            />
+                          </SelectTrigger>
+                        </FormControl>
+                        <SelectContent>
+                          {encryptOptions.map((option) => (
+                            <SelectItem key={option.label} value={option.value}>
+                              {option.label}
+                            </SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={form.control}
                   name="prompt"
                   render={({ field }) => (
                     <FormItem>
@@ -237,7 +274,7 @@ const Body = ({
                       disabled={isLoading}
                     >
                       <SelectTrigger className="w-max">
-                        <SelectValue placeholder="select from options" />
+                        <SelectValue placeholder="for some inspiration..." />
                       </SelectTrigger>
                       <SelectContent>
                         {suggestions.map((suggestion) => (

@@ -11,6 +11,7 @@ let heroImages = [
   '/8.png',
   '/1.png',
   '/4.png',
+  '/13.png',
   '/2.png',
   '/3.png',
   '/5.png',

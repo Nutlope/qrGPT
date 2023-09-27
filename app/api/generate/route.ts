@@ -132,6 +132,7 @@ export async function POST(request: NextRequest) {
     url: generateWifiStr({
       wifi_name: reqBody.wifi_name,
       wifi_password: reqBody.wifi_password,
+      encrpytion: reqBody.encryption,
     }),
     scheduler: 'HeunDiscrete',
     // scheduler: randomBool === true ? 'HeunDiscrete' : 'PNDM',
@@ -157,11 +158,6 @@ export async function POST(request: NextRequest) {
   });
   console.log('canvas time', Date.now() - now);
 
-  // // convert output to a blob object
-  // const passwordFile = await fetch(canvasImg).then((res) => res.blob());
-  // // convert output to a blob object
-  // const woPasswordFile = await fetch(imageUrl).then((res) => res.blob());
-
   const [passwordFile, woPasswordFile] = await Promise.all([
     fetch(canvasImg).then((res) => res.blob()),
     fetch(canvasImg2).then((res) => res.blob()),
@@ -183,6 +179,7 @@ export async function POST(request: NextRequest) {
     displayImg: woPassword.url,
     wifi_name: reqBody.wifi_name,
     wifi_password: reqBody.wifi_password,
+    encryptionSelected: reqBody.encryption,
     model_latency: Math.round(durationMS),
   });
 
