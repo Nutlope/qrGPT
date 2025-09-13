@@ -92,54 +92,33 @@ const Body = ({
     },
     [form],
   );
-
-  const handleSubmit = useCallback(
-    async (values: GenerateFormValues) => {
-      setIsLoading(true);
-      setResponse(null);
-      setSubmittedURL(values.url);
-
-      try {
-        const request: QrGenerateRequest = {
-          url: values.url,
-          prompt: values.prompt,
-        };
-        const response = await fetch('/api/generate', {
-          method: 'POST',
-          body: JSON.stringify(request),
-        });
-
-        // Handle API errors.
-        if (!response.ok || response.status !== 200) {
-          const text = await response.text();
-          throw new Error(
-            `Failed to generate QR code: ${response.status}, ${text}`,
-          );
-        }
-
-        const data = await response.json();
-
-        va.track('Generated QR Code', {
-          prompt: values.prompt,
-        });
-
-        router.push(`/start/${data.id}`);
-      } catch (error) {
-        va.track('Failed to generate', {
-          prompt: values.prompt,
-        });
-        if (error instanceof Error) {
-          setError(error);
-        }
-      } finally {
-        setIsLoading(false);
-      }
-    },
-    [router],
-  );
+  function handleSubmit() {
+    toast.error('This site is no longer available.');
+  }
 
   return (
     <div className="flex justify-center items-center flex-col w-full lg:p-0 p-4 sm:mb-28 mb-0">
+      {/* Shutdown Banner */}
+      <div className="w-full max-w-6xl mb-6">
+        <Alert variant="destructive" className="border-red-500 bg-red-50">
+          <AlertCircle className="h-4 w-4" />
+          <AlertTitle className="text-red-800 font-bold">
+            Site Shutdown Notice
+          </AlertTitle>
+          <AlertDescription className="text-red-700">
+            We&apos;ve decided to shut down this site as it&apos;s gotten too
+            expensive to run. If you&apos;re interested in paying for nice QR
+            codes like this, please send an email to{' '}
+            <a
+              href="mailto:hassan@hey.com"
+              className="font-semibold underline hover:text-red-900"
+            >
+              hassan@hey.com
+            </a>
+          </AlertDescription>
+        </Alert>
+      </div>
+
       <div className="max-w-6xl w-full grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-12 mt-10">
         <div className="col-span-1">
           <h1 className="text-3xl font-bold mb-10">Generate a QR Code</h1>
